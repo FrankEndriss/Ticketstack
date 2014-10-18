@@ -49,7 +49,7 @@ function writeList() {
 		$("#tsTable").append('<tr>'+
 				(i>0?
 				'<td><input type="button" id="bUp'+i+'" value="Up" onclick="onUpClick('+"'"+ticketId+"'"+')" /></td>'
-				:'<td>" "</td>')+
+				:'<td> </td>')+
 				'<td><a href="https://support.neo-business.info/browse/'+ticketId+'">'+ticketId+'</a></td>'+
 				'<td>'+jsonData[i].text+'</td></tr>');
 		//$("#bUp"+i).click(function() {
@@ -62,12 +62,10 @@ function writeList() {
 /** Called if up-button of ticket ticketId was clicked */
 function onUpClick(event) {
 	log("onUpClick("+event+")");
-	/*
    	xmlHttp = new XMLHttpRequest();
    	xmlHttp.onreadystatechange = onUpClickReturned(xmlHttp);
    	xmlHttp.open( "POST", "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/up", true);
    	xmlHttp.send( null );
-   	*/
 }
 
 function onUpClickReturned(xmlHttp) {
