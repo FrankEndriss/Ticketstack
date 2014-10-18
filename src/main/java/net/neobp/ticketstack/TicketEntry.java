@@ -1,0 +1,36 @@
+package net.neobp.ticketstack;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class TicketEntry {
+	
+	private String ticket;
+	private String text;
+	private int prio;
+	
+	public String getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(final String ticket) {
+		this.ticket = ticket;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(final String text) {
+		this.text = text;
+	}
+
+	public int getPrio() {
+		return prio;
+	}
+
+	public void setPrio(final int prio) {
+		this.prio = prio;
+	}
+
+}
