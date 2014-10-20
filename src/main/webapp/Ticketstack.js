@@ -5,13 +5,11 @@ function log(logstring) {
 }
 
 
-var xmlHttp = null;
-
-function TSTableEvent(type, data, idx=-1, idxTo=-1) {
+function TSTableEvent(type, data, idx1, idx2) {
 	this.type=type;
 	this.data=data;
-	this.idx=idx;
-	this.idxTo=idxTo;
+	this.idx1=idx1 || -1;
+	this.idx2=idx2 || -1;
 }
 
 function TSTableModel() {
@@ -36,22 +34,30 @@ function TSTableModel() {
 		return this.ticketList.length;
 	}
 
+	/** Reset the complete data list.
+	 * @public */
+	this.data=function(data) {
+		this.ticketList=data;
+		this.fireEvent(new TSTableEvent("anyChange", null));
+	}
+
 	/** @public */
 	this.push=function(ticketEntry) {
 		this.ticketList.push(ticketEntry);
-		this.fireEvent(new TableChangeEvent("appended", ticketEntry));
+		this.fireEvent(new TSTableEvent("inserted", ticketEntry, ticketList.length-1));
 	}
 	
 	/** @public */
 	this.insert=function(ticketEntry, idx) {
 		this.ticketList.splice(idx, 0, ticketEntry);
-		this.fireEvent(new TableChangeEvent("inserted", ticketEntry, idx));
+		this.fireEvent(new TSTableEvent("inserted", ticketEntry, idx));
 	}
 	
 	/** @public */
 	this.remove=function(idx) {
+		var ticket=ticketList[idx];
 		this.ticketList.splice(idx, 1);
-		this.fireEvent(new TableChangeEvent("removed", idx));
+		this.fireEvent(new TSTableEvent("removed", ticket, idx));
 	}
 
 	/**  Moves an entry within the list
@@ -62,26 +68,36 @@ function TSTableModel() {
 		var ticket=ticketList[fromIdx];
 		this.ticketList.splice(fromIdx, 1);
 		this.ticketList.splice(fromIdx+offset, 0, ticket);
-		this.fireEvent(new TableChangeEvent("moved", ticket, fromIdx, fromIdx+offset));
+		this.fireEvent(new TSTableEvent("moved", ticket, fromIdx, fromIdx+offset));
 	}
 
 	/** Returns the value to display at the table-field [row, field]
 	 * field may be a property-name or an index.
 	 */
-	this.getValue=funtion(row, field) {
+	this.getValue=function(row, field) {
 		return ticketList[row][field];
+	}
+	
+	/** Call this method after the data of a row changed. If only one field changed,
+	 * assign a value to field.
+	 * @public
+	 */
+	this.rowChanged=function(row, field) {
+		field=field || -1;
+		this.fireEvent(new TSTableEvent("changed", ticketList[row], row, field));
 	}
 
 	/** @private */
 	this.fireEvent=function(evt) {
-		for(var i=0; i<listeners.length; i++) {
-			listeners[i].tsTableEvent(evt);
+		for(var i=0; i<this.listeners.length; i++) {
+			this.listeners[i].tsTableEvent(evt);
 		}
 	}
 	
 }
 
-var tabC=1;
+/** global table counter, used for html tableID */
+var tabC=0;
 
 /** Constructor of a TSTable backed by a TSModel
  * @param htmlParent the htmlParent where the table lives in. Should be an empty div.
@@ -89,39 +105,49 @@ var tabC=1;
  * @returns the table
  */
 function TSTable(htmlParent, model) {
-	this.htmlParent=htmlParent;
-	this.model=model;
-	this.tableID="tstable_"+(++tabC);
+	/** @private */
+	//this.htmlParent=htmlParent;
+	/** @private */
+	//this.model=model;
+
+	/** @readonly */
+	var tableID="tstable_"+(++tabC);
+	var tableSelector='#'+tableID;
 	
 	/** Rerenders the complete table.
+	 * @public
 	 */
 	this.render=function() {
-		htmlParent.remove($(tableID));
+		try { // on first call this will throw an ex because the table does not exists
+			$(tableSelector).remove();
+		}catch(e) {
+			log("ex while remove: "+tableSelector);
+			// ignore
+		}
+
 		htmlParent.append('<table id="'+tableID+'" border=1></table>');
 
 		// create header row
-		var hRow='<tr>';
-		for(int i=0; i<model.colHeaders.length; i++) {
-			$(tableId).append('<th></th>');
-			$(tableId).('th:'+i).text(model.colHeaders[i]);
+		$(tableSelector).append('<tr></tr>');
+		for(var i=0; i<model.colHeaders.length; i++) {
+			$(tableSelector+' > tr:first').append('<th></th>');
+			$(tableSelector+' > th:eq('+i+')').text(model.colHeaders[i]);
 		}
 
-		hRow+='</tr>';
-		$(tableID).append(hRow);
-		
 		// add data rows
 		for(var r=0; r<model.size(); r++) {
-			$(tableId).append('<tr></tr>');
-			var jQrow=$(tableId).('tr:'+(r+1));
+			$(tableSelector).append('<tr></tr>');
+			var selRow=tableSelector+' > tr:eq('+(r+1)+')';
 
-			for(c=0; c<model.columns.length; c++) {
-				jQrow.append('<td></td>');
-				jQrow.('td:'+c).text(''+model.get(r, model.columns[c]));
+			for(var c=0; c<model.columns.length; c++) {
+				$(selRow).append('<td></td>');
+				$(selRow+' > td:eq('+c+')').text(''+model.get(r, model.columns[c]));
 			}
 		}
 	}
 
-	this.tsTableEvent(evt) {
+	/** Called by TSTableModel  */
+	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
 		this.render();
 	}
@@ -131,6 +157,7 @@ function TSTable(htmlParent, model) {
 }
 
 // erzeugt die Tabelle mit den Tickets
+/*
 function writeList() {
 
 	log("DEBUG: retrieving data: readyState="+xmlHttp.readyState+" status="+xmlHttp.status);
@@ -181,8 +208,10 @@ function writeList() {
 		//});
 	}
 }
+*/
 
 /** Called if up-button of ticket ticketId was clicked */
+/*
 function onUpClick(event) {
 	log("onUpClick("+event+")");
    	xmlHttp = new XMLHttpRequest();
@@ -198,6 +227,7 @@ function onUpClickReturned(xmlHttp) {
 	} else 
 		loadData();
 }
+*/
 
 function ticketlist_xml2json(xmlData) {
 	var res=new Array();
@@ -211,24 +241,6 @@ function ticketlist_xml2json(xmlData) {
 	return res;
 }
 
-
-function loadData() {
-
-	try {
-    	xmlHttp = new XMLHttpRequest();
-    	//xmlHttp.overrideMimeType("application/json");
-    	//xmlHttp.responseType="json";
-    	// TODO: call onLoadDataReturn instead of writeList, and there writeList, so no global var is needed
-    	xmlHttp.onreadystatechange = writeList;
-    	xmlHttp.open( "GET", "http://localhost:8080/Ticketstack/rest/TicketEntryResource", true);
-    	//xmlHttp.setRequestHeader("Accept", "application/json");
-    	xmlHttp.send( null );
-	}catch(ex) {
-		log("ex while XMLHttpRequest: "+ex);
-	}
-
-    // return jsonHttp.responseText;
-}
 
 // schreibt die Überschrift
 function writeHeader() {
@@ -245,15 +257,38 @@ function writeFooter() {
 
 }
 
+function TicketstackBody(tableParent) {
+    var model=new TSTableModel();
+    
+    this.loadData=function() {
+		$.ajax({
+			type: "GET",
+			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
+			success: function(data, status, jqXHR) {
+				model.data(ticketlist_xml2json(data));
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert("Reload failed: "+textStatus);
+			}
+		});
+    };
+
+    log("creating table as child of: "+tableParent);
+
+    new TSTable(tableParent, model);
+    this.loadData();
+}
+
 //erzeugt den <body> der Seite, soll auf Seite mit leerem body aufgerufen werden.
 function startTicketstackApp() {
 	log("in startTicketstackApp()");
 	// creates 3 divs in <body> of page
 	var divIDs=[ "ts_appHeader", "ts_appBody", "ts_appFooter" ];
 	for(var i=0; i<divIDs.length; i++) {
-		$("body:first").append('<div id="'+divIDs[i]+'" class="ts:topLevelDiv" ></div>');
+		$("body:first").append('<div id="'+divIDs[i]+'" class="ts_topLevelDiv" ></div>');
 	}
     writeHeader();
-    loadData();
     writeFooter();
+    log("startup...");
+    new TicketstackBody($("#ts_appBody"));
 }
