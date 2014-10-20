@@ -142,13 +142,24 @@ function TSTable(domParent, model) {
 		for(var r=0; r<model.size(); r++) {
 			log("adding data row: idx="+r);
 			$table.append('<tr></tr>');
-			var $row=$(tableSelector+' tr:eq('+(r+1)+')');
+			var $row=$(tableSelector+' tr').eq(r+1);
 			for(var c=0; c<model.cols.length; c++) {
 				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
 				$row.append('<td></td>');
-				$row.children('td').eq(c).text(''+model.getValue(r, model.cols[c]));
+				this.html($row.children('td').last(), r, model.cols[c]);
 			}
 		}
+	}
+	
+	/** @public 
+	 * Override this method to create nice html.
+	 */
+	this.html=function($jq, row, col) {
+		$jq.text(model.getValue(row, col));
+	}
+
+	this.model=function() {
+		return model;
 	}
 
 	/** Called by TSTableModel  */
