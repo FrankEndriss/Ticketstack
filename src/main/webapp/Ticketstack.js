@@ -7,6 +7,129 @@ function log(logstring) {
 
 var xmlHttp = null;
 
+function TSTableEvent(type, data, idx=-1, idxTo=-1) {
+	this.type=type;
+	this.data=data;
+	this.idx=idx;
+	this.idxTo=idxTo;
+}
+
+function TSTableModel() {
+	/** @private */
+	this.ticketList=[];
+	/** @private */
+	this.listeners=[];
+	/** Strings to display as column headers
+	 * @private */
+	this.colHeaders=[];
+	/** Names of the properties of the values to display in the columns
+	 * @private */
+	this.columns=[];
+	
+	/** @public */
+	this.addListener=function(listener) {
+		this.listeners.push(listener);
+	}
+
+	/** @public */
+	this.size=function() {
+		return this.ticketList.length;
+	}
+
+	/** @public */
+	this.push=function(ticketEntry) {
+		this.ticketList.push(ticketEntry);
+		this.fireEvent(new TableChangeEvent("appended", ticketEntry));
+	}
+	
+	/** @public */
+	this.insert=function(ticketEntry, idx) {
+		this.ticketList.splice(idx, 0, ticketEntry);
+		this.fireEvent(new TableChangeEvent("inserted", ticketEntry, idx));
+	}
+	
+	/** @public */
+	this.remove=function(idx) {
+		this.ticketList.splice(idx, 1);
+		this.fireEvent(new TableChangeEvent("removed", idx));
+	}
+
+	/**  Moves an entry within the list
+	 * @param fromIdx move the item at
+	 * @public
+	 **/
+	this.move=function(fromIdx, offset) {
+		var ticket=ticketList[fromIdx];
+		this.ticketList.splice(fromIdx, 1);
+		this.ticketList.splice(fromIdx+offset, 0, ticket);
+		this.fireEvent(new TableChangeEvent("moved", ticket, fromIdx, fromIdx+offset));
+	}
+
+	/** Returns the value to display at the table-field [row, field]
+	 * field may be a property-name or an index.
+	 */
+	this.getValue=funtion(row, field) {
+		return ticketList[row][field];
+	}
+
+	/** @private */
+	this.fireEvent=function(evt) {
+		for(var i=0; i<listeners.length; i++) {
+			listeners[i].tsTableEvent(evt);
+		}
+	}
+	
+}
+
+var tabC=1;
+
+/** Constructor of a TSTable backed by a TSModel
+ * @param htmlParent the htmlParent where the table lives in. Should be an empty div.
+ * @param model the data to display
+ * @returns the table
+ */
+function TSTable(htmlParent, model) {
+	this.htmlParent=htmlParent;
+	this.model=model;
+	this.tableID="tstable_"+(++tabC);
+	
+	/** Rerenders the complete table.
+	 */
+	this.render=function() {
+		htmlParent.remove($(tableID));
+		htmlParent.append('<table id="'+tableID+'" border=1></table>');
+
+		// create header row
+		var hRow='<tr>';
+		for(int i=0; i<model.colHeaders.length; i++) {
+			$(tableId).append('<th></th>');
+			$(tableId).('th:'+i).text(model.colHeaders[i]);
+		}
+
+		hRow+='</tr>';
+		$(tableID).append(hRow);
+		
+		// add data rows
+		for(var r=0; r<model.size(); r++) {
+			$(tableId).append('<tr></tr>');
+			var jQrow=$(tableId).('tr:'+(r+1));
+
+			for(c=0; c<model.columns.length; c++) {
+				jQrow.append('<td></td>');
+				jQrow.('td:'+c).text(''+model.get(r, model.columns[c]));
+			}
+		}
+	}
+
+	this.tsTableEvent(evt) {
+		// TODO optimize for less display, ie move/remove/add rows
+		this.render();
+	}
+
+	model.addListener(this);
+	this.render();
+}
+
 // erzeugt die Tabelle mit den Tickets
 function writeList() {
 
