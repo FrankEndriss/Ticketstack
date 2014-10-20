@@ -19,11 +19,21 @@ function TSTableModel() {
 	this.listeners=[];
 	/** Strings to display as column headers
 	 * @private */
-	this.colHeaders=[];
+	this.colHea=[];
 	/** Names of the properties of the values to display in the columns
 	 * @private */
-	this.columns=[];
+	this.cols=[];
 	
+	this.setColumns=function(columns) {
+		this.cols=columns;
+		this.fireEvent(new TSTableEvent("anyChange", null));
+	}
+
+	this.setColHeaders=function(colHeaders) {
+		this.colHea=colHeaders;
+		this.fireEvent(new TSTableEvent("anyChange", null));
+	}
+
 	/** @public */
 	this.addListener=function(listener) {
 		this.listeners.push(listener);
@@ -37,6 +47,7 @@ function TSTableModel() {
 	/** Reset the complete data list.
 	 * @public */
 	this.data=function(data) {
+		log("TSTableModel.data(): "+data);
 		this.ticketList=data;
 		this.fireEvent(new TSTableEvent("anyChange", null));
 	}
@@ -75,7 +86,7 @@ function TSTableModel() {
 	 * field may be a property-name or an index.
 	 */
 	this.getValue=function(row, field) {
-		return ticketList[row][field];
+		return this.ticketList[row][field];
 	}
 	
 	/** Call this method after the data of a row changed. If only one field changed,
@@ -100,17 +111,12 @@ function TSTableModel() {
 var tabC=0;
 
 /** Constructor of a TSTable backed by a TSModel
- * @param htmlParent the htmlParent where the table lives in. Should be an empty div.
+ * @param domParent the domParent where the table lives in. Should be an empty div.
  * @param model the data to display
  * @returns the table
  */
-function TSTable(htmlParent, model) {
-	/** @private */
-	//this.htmlParent=htmlParent;
-	/** @private */
-	//this.model=model;
+function TSTable(domParent, model) {
 
-	/** @readonly */
 	var tableID="tstable_"+(++tabC);
 	var tableSelector='#'+tableID;
 	
@@ -118,30 +124,29 @@ function TSTable(htmlParent, model) {
 	 * @public
 	 */
 	this.render=function() {
-		try { // on first call this will throw an ex because the table does not exists
-			$(tableSelector).remove();
-		}catch(e) {
-			log("ex while remove: "+tableSelector);
-			// ignore
-		}
-
-		htmlParent.append('<table id="'+tableID+'" border=1></table>');
+		log("render...");
+		$(tableSelector).remove();
+		domParent.append('<table id="'+tableID+'" border=1></table>');
+		var $table=$(tableSelector);
 
 		// create header row
-		$(tableSelector).append('<tr></tr>');
-		for(var i=0; i<model.colHeaders.length; i++) {
-			$(tableSelector+' > tr:first').append('<th></th>');
-			$(tableSelector+' > th:eq('+i+')').text(model.colHeaders[i]);
+		$table.append('<tr></tr>');
+		$hRow=$(tableSelector+' tr:first');
+		for(var i=0; i<model.colHea.length; i++) {
+			log("adding header: "+model.colHea[i]);
+			$hRow.append('<th></th>');
+			$hRow.children('th').eq(i).text(model.colHea[i]);
 		}
 
 		// add data rows
 		for(var r=0; r<model.size(); r++) {
-			$(tableSelector).append('<tr></tr>');
-			var selRow=tableSelector+' > tr:eq('+(r+1)+')';
-
-			for(var c=0; c<model.columns.length; c++) {
-				$(selRow).append('<td></td>');
-				$(selRow+' > td:eq('+c+')').text(''+model.get(r, model.columns[c]));
+			log("adding data row: idx="+r);
+			$table.append('<tr></tr>');
+			var $row=$(tableSelector+' tr:eq('+(r+1)+')');
+			for(var c=0; c<model.cols.length; c++) {
+				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
+				$row.append('<td></td>');
+				$row.children('td').eq(c).text(''+model.getValue(r, model.cols[c]));
 			}
 		}
 	}
@@ -230,12 +235,19 @@ function onUpClickReturned(xmlHttp) {
 */
 
 function ticketlist_xml2json(xmlData) {
+	log("ticketlist_xml2json, xmlData="+xmlData+" len="+xmlData.childNodes.length);
+	var tickets=xmlData.getElementsByTagName("ticketEntry");
+	log("tickets "+tickets);
 	var res=new Array();
-	for(var i=0; i<xmlData.length; i++) {
-		var ticketentry={ ticket: xmlData[i].getElementsByTagName("ticket")[0].childNodes[0].nodeValue,
-							text: xmlData[i].getElementsByTagName("text")[0].childNodes[0].nodeValue,
-							prio: xmlData[i].getElementsByTagName("prio")[0].childNodes[0].nodeValue
+	for(var i=0; i<tickets.length; i++) {
+		log("creating json ticketentry: "+ticketentry+" ticket:"+tickets[i].getElementsByTagName("ticket")[0].nodeValue);
+		var lTicket=tickets[i].getElementsByTagName("ticket");
+		log("getElementsByTagName(ticket): "+lTicket);
+		var ticketentry={ ticket: tickets[i].getElementsByTagName("ticket")[0].childNodes[0].nodeValue,
+							text: tickets[i].getElementsByTagName("text")[0].childNodes[0].nodeValue,
+							prio: tickets[i].getElementsByTagName("prio")[0].childNodes[0].nodeValue
 		};
+		log("created json ticketentry: "+ticketentry+" ticket:"+ticketentry["ticket"]);
 		res.push(ticketentry);
 	}
 	return res;
@@ -259,6 +271,8 @@ function writeFooter() {
 
 function TicketstackBody(tableParent) {
     var model=new TSTableModel();
+    model.setColHeaders([ "Ticket", "Text" ]);
+    model.setColumns([ "ticket", "text" ]);
     
     this.loadData=function() {
 		$.ajax({
