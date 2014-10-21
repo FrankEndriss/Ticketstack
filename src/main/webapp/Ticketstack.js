@@ -1,9 +1,8 @@
 var DEBUG = true;
 function log(logstring) {
 	if(DEBUG)
-		$("#ts_appFooter").prepend("<br/>"+logstring);
+		$("#ts_appFooter").prepend( $('<div>', { text: logstring }) );
 }
-
 
 function TSTableEvent(type, data, idx1, idx2) {
 	this.type=type;
@@ -120,6 +119,36 @@ function TSTable(domParent, model) {
 	var tableID="tstable_"+(++tabC);
 	var tableSelector='#'+tableID;
 	
+	/** Map of functions creating the td-tags within the table */
+	var tdCreators=new Object();
+	
+	var createTD=function(rowSelector, row, col) {
+		log("creating <td> for row, sel="+rowSelector+" row="+row+" col="+col+" value="+model.getValue(row, col));
+		if(tdCreators[col]) {
+			log("using tdCreator: "+tdCreators[col]);
+			tdCreators[col](rowSelector, model, row, col);
+		} else { // default implementation
+			$(rowSelector).append( $('<td>', { text: model.getValue(row, col) }) );
+//			$(rowSelector).append( $('<td>', { text: "blah" }) );
+		}
+	}
+
+	/** Set a renderer for a column.
+	 * Called as: renderer(rowSelector, model, row, col) where
+	 * rowSelector is a selector string to get the row
+	 * model is the TSTableModel
+	 * row is the (integer) index into the model
+	 * col is the index of the column
+	 * 
+	 * The default implementation does a 
+     * $(rowSelector).append( $('<td>', { text: model.getValue(row, col) }) );
+	 * 
+	 * @public
+	 */
+	this.setColRenderer=function(row, renderer) {
+		tdCreators[row]=renderer;
+	}
+
 	/** Rerenders the complete table.
 	 * @public
 	 */
@@ -142,26 +171,14 @@ function TSTable(domParent, model) {
 		for(var r=0; r<model.size(); r++) {
 			log("adding data row: idx="+r);
 			$table.append('<tr></tr>');
-			var $row=$(tableSelector+' tr').eq(r+1);
+			var rowSelector=tableSelector+' tr:last';
 			for(var c=0; c<model.cols.length; c++) {
 				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
-				$row.append('<td></td>');
-				this.html($row.children('td').last(), r, model.cols[c]);
+				createTD(rowSelector, r, model.cols[c]);
 			}
 		}
 	}
 	
-	/** @public 
-	 * Override this method to create nice html.
-	 */
-	this.html=function($jq, row, col) {
-		$jq.text(model.getValue(row, col));
-	}
-
-	this.model=function() {
-		return model;
-	}
-
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
@@ -285,7 +302,7 @@ function TicketstackBody(tableParent) {
     model.setColHeaders([ "Ticket", "Text" ]);
     model.setColumns([ "ticket", "text" ]);
     
-    this.loadData=function() {
+    var loadData=function() {
 		$.ajax({
 			type: "GET",
 			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
@@ -300,8 +317,19 @@ function TicketstackBody(tableParent) {
 
     log("creating table as child of: "+tableParent);
 
-    new TSTable(tableParent, model);
-    this.loadData();
+    var table=new TSTable(tableParent, model);
+    
+    // set a column renderer to display a link, not only the text
+    table.setColRenderer("ticket", function(rowSelector, model, row, col) {
+    	var ticketId=model.getValue(row, col);
+    	$(rowSelector).append($("<td>", { text: ""}));
+    	$(rowSelector+" td:last").append($("<a>", {
+				href: 'https://support.neo-business.info/browse/'+ticketId,
+				text: ticketId
+    		}));
+    });
+
+    loadData();
 }
 
 //erzeugt den <body> der Seite, soll auf Seite mit leerem body aufgerufen werden.
