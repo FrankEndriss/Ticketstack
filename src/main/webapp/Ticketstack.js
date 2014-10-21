@@ -17,9 +17,9 @@ function TSTableEvent(type, data, idx1, idx2) {
 
 function TSTableModel() {
 	/** @private */
-	this.ticketList=[];
+	var ticketList=[];
 	/** @private */
-	this.listeners=[];
+	var listeners=[];
 	/** Strings to display as column headers
 	 * @private */
 	this.colHea=[];
@@ -29,48 +29,48 @@ function TSTableModel() {
 	
 	this.setColumns=function(columns) {
 		this.cols=columns;
-		this.fireEvent(new TSTableEvent("anyChange", null));
+		this.fireEvent(new TSTableEvent("metaChange", null));
 	}
 
 	this.setColHeaders=function(colHeaders) {
-		this.colHea=colHeaders;
-		this.fireEvent(new TSTableEvent("anyChange", null));
+		colHea=colHeaders;
+		this.fireEvent(new TSTableEvent("metaChange", null));
 	}
 
 	/** @public */
 	this.addListener=function(listener) {
-		this.listeners.push(listener);
+		listeners.push(listener);
 	}
 
 	/** @public */
 	this.size=function() {
-		return this.ticketList.length;
+		return ticketList.length;
 	}
 
 	/** Reset the complete data list.
 	 * @public */
 	this.data=function(data) {
 		log("TSTableModel.data(): "+data);
-		this.ticketList=data;
-		this.fireEvent(new TSTableEvent("anyChange", null));
+		ticketList=data;
+		this.fireEvent(new TSTableEvent("dataChange", null));
 	}
 
 	/** @public */
 	this.push=function(ticketEntry) {
-		this.ticketList.push(ticketEntry);
+		ticketList.push(ticketEntry);
 		this.fireEvent(new TSTableEvent("inserted", ticketEntry, ticketList.length-1));
 	}
 	
 	/** @public */
 	this.insert=function(ticketEntry, idx) {
-		this.ticketList.splice(idx, 0, ticketEntry);
+		ticketList.splice(idx, 0, ticketEntry);
 		this.fireEvent(new TSTableEvent("inserted", ticketEntry, idx));
 	}
 	
 	/** @public */
 	this.remove=function(idx) {
 		var ticket=ticketList[idx];
-		this.ticketList.splice(idx, 1);
+		ticketList.splice(idx, 1);
 		this.fireEvent(new TSTableEvent("removed", ticket, idx));
 	}
 
@@ -80,8 +80,8 @@ function TSTableModel() {
 	 **/
 	this.move=function(fromIdx, offset) {
 		var ticket=ticketList[fromIdx];
-		this.ticketList.splice(fromIdx, 1);
-		this.ticketList.splice(fromIdx+offset, 0, ticket);
+		ticketList.splice(fromIdx, 1);
+		ticketList.splice(fromIdx+offset, 0, ticket);
 		this.fireEvent(new TSTableEvent("moved", ticket, fromIdx, fromIdx+offset));
 	}
 
@@ -89,7 +89,7 @@ function TSTableModel() {
 	 * field may be a property-name or an index.
 	 */
 	this.getValue=function(row, field) {
-		return this.ticketList[row][field];
+		return ticketList[row][field];
 	}
 	
 	/** Call this method after the data of a row changed. If only one field changed,
@@ -103,8 +103,8 @@ function TSTableModel() {
 
 	/** @private */
 	this.fireEvent=function(evt) {
-		for(var i=0; i<this.listeners.length; i++) {
-			this.listeners[i].tsTableEvent(evt);
+		for(var i=0; i<listeners.length; i++) {
+			listeners[i].tsTableEvent(evt);
 		}
 	}
 	
@@ -121,6 +121,7 @@ var tabC=0;
 function TSTable(domParent, model) {
 
 	var tableID="tstable_"+(++tabC);
+	var $table;
 	
 	/** Map of functions creating the td-tags within the table */
 	var tdCreators=new Object();
@@ -159,7 +160,7 @@ function TSTable(domParent, model) {
 	 */
 	var render=function() {
 		log("render...");
-		var $table=$('<table>', { id : tableID, border: 1 });
+		$table=$('<table>', { id : tableID, border: 1 });
 
 		// create header row
 		var $hRow=$('<tr>');
@@ -192,7 +193,11 @@ function TSTable(domParent, model) {
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
-		render();
+		if(evt.type==='removed') {
+			log("$table.remove on event, idx="+(evt.idx1+1));
+			$table.find('tr').eq(evt.idx1+1).remove();
+		} else
+			render();
 	}
 
 	model.addListener(this);
@@ -288,16 +293,17 @@ function TicketstackBody(tableParent, inputParent) {
 	};
 
     /** Called if del-button of ticket ticketId was clicked */
-    var onDelClick=function(ticketId) {
-    	log("onDelClick("+ticketId+")");
+    var onDelClick=function(ticketId, row) {
+    	log("onDelClick("+ticketId+', '+row+")");
+    	model.remove(row);
     	$.ajax({
-    		type: "DELETE",
+    		type: "POST",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/delete",
     		success: function(data, status, jqXHR) {
-    			// TODO optimize to delete row in model instead of reload data
-    			loadData();
+    			log("onDelClick:success, calling model.remove");
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
+				loadData();
 				alert("Ticket delete failed: "+textStatus);
 			}
     	});
@@ -356,7 +362,7 @@ function TicketstackBody(tableParent, inputParent) {
 				type: 'button',
     			id:   'bDel'+row,
     			value: "Del"
-    		})).click(function() { onDelClick(ticketId); });
+    		})).click(function() { onDelClick(ticketId, row); });
     });
 
     // create the input form

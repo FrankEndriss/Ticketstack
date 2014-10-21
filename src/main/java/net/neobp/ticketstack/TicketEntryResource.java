@@ -54,9 +54,10 @@ public class TicketEntryResource {
 		TicketDB.moveTicketDown(id);
 	}
 	
-	@DELETE
+	@POST
 	@Path("{id}/delete")
 	public void deleteTicket(@PathParam("id") final String id) {
+		System.out.println("deleteTicket called, "+id);
 		TicketDB.removeTicketEntry(id);
 	}
 	
