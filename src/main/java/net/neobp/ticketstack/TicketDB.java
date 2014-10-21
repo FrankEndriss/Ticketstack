@@ -40,6 +40,27 @@ public class TicketDB {
 			throw new IllegalArgumentException("notfound: "+id);
 	}
 	
+	/** Inserts the ticket ticketEntry as first ticket.
+	 * Prios of all other Tickets are adjusted
+	 * @param ticketEntry
+	 */
+	public static void insertTicket(final TicketEntry ticketEntry) {
+		if(tickets.get(ticketEntry.getTicket())!=null)
+			throw new IllegalArgumentException("ticket exists");
+			
+		final List<TicketEntry> tickets=getAllTicketEntries();
+		// Prio of new ticket
+		final int firstPrio=tickets.size()>0?
+				tickets.get(0).getPrio():
+				1;
+		ticketEntry.setPrio(firstPrio);
+		// adjust prio of all other tickets
+		for(TicketEntry te : tickets) {
+			te.setPrio(te.getPrio()+1);
+		}
+		
+	}
+	
 	/** Update/Insert of ticket. ticket.getTicket() must not be null, primaryKey.
 	 * @param ticket the updated ticket
 	 */

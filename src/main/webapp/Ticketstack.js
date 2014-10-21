@@ -155,9 +155,9 @@ function TSTable(domParent, model) {
 	}
 
 	/** Rerenders the complete table.
-	 * @public
+	 * @private
 	 */
-	this.render=function() {
+	var render=function() {
 		log("render...");
 		var $table=$('<table>', { id : tableID, border: 1 });
 
@@ -192,11 +192,11 @@ function TSTable(domParent, model) {
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
-		this.render();
+		render();
 	}
 
 	model.addListener(this);
-	this.render();
+	render();
 }
 
 function ticketlist_xml2json(xmlData) {
@@ -234,7 +234,7 @@ function writeFooter() {
 
 }
 
-function TicketstackBody(tableParent) {
+function TicketstackBody(tableParent, inputParent) {
     var model=new TSTableModel();
     model.setColHeaders([ "Up", "Down", "Ticket", "Text", "Delete" ]);
     model.setColumns([ "buttonUp", "buttonDown", "ticket", "text", "buttonDel" ]);
@@ -360,6 +360,28 @@ function TicketstackBody(tableParent) {
     });
 
     // create the input form
+    // TODO extract class
+    inputParent.append($('<input>', {
+    	type: 'text',
+    	id: 'ts_app_inp_ticket',
+    	label: 'Ticket'
+    }));
+    inputParent.append($('<input>', {
+    	type: 'text',
+    	id: 'ts_app_inp_text',
+    	label: 'Text'
+    }));
+    inputParent.prepend($('<input>', {
+    	type: 'button',
+    	id: 'bAdd',
+    	value: 'Add'
+    	}).click(function() {
+    		var newTicket=$('#ts_app_inp_ticket').val();
+    		var newText=$('#ts_app_inp_text').val();
+
+    		log("fake adding: ticket:"+newTicket+" text:"+newText);
+    	}));
+
     
     // initially load the table data from the backend
     loadData();
@@ -369,12 +391,12 @@ function TicketstackBody(tableParent) {
 function startTicketstackApp() {
 	log("in startTicketstackApp()");
 	// creates 3 divs in <body> of page
-	var divIDs=[ "ts_appHeader", "ts_appBody", "ts_appFooter" ];
+	var divIDs=[ "ts_appHeader", "ts_appTable", "ts_appInput", "ts_appFooter" ];
 	for(var i=0; i<divIDs.length; i++) {
 		$("body:first").append('<div id="'+divIDs[i]+'" class="ts_topLevelDiv" ></div>');
 	}
     writeHeader();
     writeFooter();
     log("startup...");
-    new TicketstackBody($("#ts_appBody"));
+    new TicketstackBody($("#ts_appTable"), $('#ts_appInput'));
 }

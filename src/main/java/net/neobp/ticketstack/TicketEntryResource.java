@@ -22,6 +22,11 @@ public class TicketEntryResource {
 		return TicketDB.getAllTicketEntries();
 	}
 	
+	@POST
+	public void insertTicket(final TicketEntry ticketEntry) {
+		TicketDB.insertTicket(ticketEntry);
+	}
+	
 	/** @param id of TicketEntry
 	 *  @return Ticket with ID id
 	 */
