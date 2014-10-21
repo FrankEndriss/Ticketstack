@@ -1,4 +1,8 @@
 var DEBUG = true;
+
+/** Simple logging function
+ * @param logstring
+ */
 function log(logstring) {
 	if(DEBUG)
 		$("#ts_appFooter").prepend( $('<div>', { text: logstring }) );
@@ -117,19 +121,20 @@ var tabC=0;
 function TSTable(domParent, model) {
 
 	var tableID="tstable_"+(++tabC);
-	var tableSelector='#'+tableID;
 	
 	/** Map of functions creating the td-tags within the table */
 	var tdCreators=new Object();
 	
-	var createTD=function(rowSelector, row, col) {
-		log("creating <td> for row, sel="+rowSelector+" row="+row+" col="+col+" value="+model.getValue(row, col));
+	/** Called when any td of the table must be created.
+	 * Calls the column renderers to do so.
+	 */
+	var createTD=function($dRow, row, col) {
+		log("creating <td> for row, sel="+$dRow+" row="+row+" col="+col+" value="+model.getValue(row, col));
 		if(tdCreators[col]) {
 			log("using tdCreator: "+tdCreators[col]);
-			tdCreators[col](rowSelector, model, row, col);
+			tdCreators[col]($dRow, model, row, col);
 		} else { // default implementation
-			$(rowSelector).append( $('<td>', { text: model.getValue(row, col) }) );
-//			$(rowSelector).append( $('<td>', { text: "blah" }) );
+			$dRow.append($('<td>').text(model.getValue(row, col)));
 		}
 	}
 
@@ -154,29 +159,34 @@ function TSTable(domParent, model) {
 	 */
 	this.render=function() {
 		log("render...");
-		$(tableSelector).remove();
-		domParent.append('<table id="'+tableID+'" border=1></table>');
-		var $table=$(tableSelector);
+		var $table=$('<table>', { id : tableID, border: 1 });
 
 		// create header row
-		$table.append('<tr></tr>');
-		$hRow=$(tableSelector+' tr:first');
+		var $hRow=$('<tr>');
+		$table.append($hRow);
+
 		for(var i=0; i<model.colHea.length; i++) {
 			log("adding header: "+model.colHea[i]);
-			$hRow.append('<th></th>');
-			$hRow.children('th').eq(i).text(model.colHea[i]);
+			var $header=$('<th>', { text: model.colHea[i] });
+			$hRow.append($header);
 		}
 
 		// add data rows
 		for(var r=0; r<model.size(); r++) {
 			log("adding data row: idx="+r);
-			$table.append('<tr></tr>');
-			var rowSelector=tableSelector+' tr:last';
+			var $dRow=$('<tr>');
+			$table.append($dRow);
 			for(var c=0; c<model.cols.length; c++) {
 				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
-				createTD(rowSelector, r, model.cols[c]);
+				createTD($dRow, r, model.cols[c]);
 			}
 		}
+
+		var $oldTable=$('#'+tableID);
+		if($oldTable.size()==0) // first call
+			domParent.prepend($table);
+		else
+			$oldTable.replaceWith($table);
 	}
 	
 	/** Called by TSTableModel  */
@@ -188,62 +198,6 @@ function TSTable(domParent, model) {
 	model.addListener(this);
 	this.render();
 }
-
-// erzeugt die Tabelle mit den Tickets
-/*
-function writeList() {
-
-	log("DEBUG: retrieving data: readyState="+xmlHttp.readyState+" status="+xmlHttp.status);
-
-	if(xmlHttp.readyState!=4 || xmlHttp.status!=200) {
-		log("return");
-		return;
-	} else 
-		log("going on...");
-	
-   	log("responseType="+xmlHttp.responseType);
-   	log("Content-Type="+xmlHttp.getResponseHeader("Content-Type"));
-
-	// DEBUG
-    log("retrieved data: readyState="+xmlHttp.readyState+" status="+xmlHttp.status);
-	log(xmlHttp.responseXML);
-	// END DEBUG
-	
-	// List<TicketEntry>
-	var jsonData;
-	try {
-		jsonData=ticketlist_xml2json(xmlHttp.responseXML.getElementsByTagName("ticketEntry"));
-		jsonData.sort(function(a, b) {
-			return a.prio-b.prio;
-		});
-	} catch(ex) {
-		log("ex while searching ticketEntry: "+ex);
-		return
-	}
-
-	log("did eval responseText, len="+jsonData.length);
-		
-	$("#ts_appBody").append('<table id="tsTable" border=1></table>');
-	$("#tsTable").append('<tr><th>OneUp</th><th>Ticket</th><th>Text</th></tr>');
-
-// data is defined in 'Ticketstack.json'
-	for(var i=0; i<jsonData.length; i++) {
-		var ticketId=jsonData[i].ticket;
-		$("#tsTable").append('<tr>'+
-				(i>0?
-				'<td><input type="button" id="bUp'+i+'" value="Up" onclick="onUpClick('+"'"+ticketId+"'"+')" /></td>'
-				:'<td> </td>')+
-				'<td><a href="https://support.neo-business.info/browse/'+ticketId+'">'+ticketId+'</a></td>'+
-				'<td>'+jsonData[i].text+'</td></tr>');
-		//$("#bUp"+i).click(function() {
-			//var lTicketId=ticketId;
-			//onUpClick(lTicketId);
-		//});
-	}
-}
-*/
-
-
 
 function ticketlist_xml2json(xmlData) {
 	log("ticketlist_xml2json, xmlData="+xmlData+" len="+xmlData.childNodes.length);
@@ -285,6 +239,9 @@ function TicketstackBody(tableParent) {
     model.setColHeaders([ "Up", "Down", "Ticket", "Text", "Delete" ]);
     model.setColumns([ "buttonUp", "buttonDown", "ticket", "text", "buttonDel" ]);
     
+    /** Loads the complete list from the backend and puts the
+     * data into the model. Which causes a redisplay of the data-table.
+     */
     var loadData=function() {
 		$.ajax({
 			type: "GET",
@@ -305,6 +262,7 @@ function TicketstackBody(tableParent) {
     		type: "POST",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/down",
     		success: function(data, status, jqXHR) {
+    			// TODO optimize to swap row prios in model instead of reload data
     			loadData();
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -320,6 +278,7 @@ function TicketstackBody(tableParent) {
     		type: "POST",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/up",
     		success: function(data, status, jqXHR) {
+    			// TODO optimize to swap row prios instead of reload data
     			loadData();
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -335,6 +294,7 @@ function TicketstackBody(tableParent) {
     		type: "POST",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/delete",
     		success: function(data, status, jqXHR) {
+    			// TODO optimize to delete row in model instead of reload data
     			loadData();
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -345,55 +305,63 @@ function TicketstackBody(tableParent) {
 
     log("creating table as child of: "+tableParent);
 
+    // create the table
     var table=new TSTable(tableParent, model);
     
     // set a column renderer to display a link, not only the text
-    table.setColRenderer("ticket", function(rowSelector, model, row, col) {
+    table.setColRenderer("ticket", function($dRow, model, row, col) {
     	var ticketId=model.getValue(row, col);
-    	$(rowSelector).append($("<td>", { text: ""}));
-    	$(rowSelector+" td:last").append($("<a>", {
+    	var $field=$('<td>');
+    	$dRow.append($field);
+    	$field.append($("<a>", {
 				href: 'https://support.neo-business.info/browse/'+ticketId,
 				text: ticketId
     		}));
     });
     
-    table.setColRenderer("buttonUp", function(rowSelector, model, row, col) {
+    // set a column renderer to display a button
+    table.setColRenderer("buttonUp", function($dRow, model, row, col) {
     	var ticketId=model.getValue(row, "ticket");
-    	$(rowSelector).append($("<td>", { text: ""}));
+    	var $field=$('<td>');
+    	$dRow.append($field);
     	if(row>0) { // not on first row
-    		$(rowSelector+" td:last").append($("<input>", {
+    		$field.append($("<input>", {
 					type: 'button',
     				id:   'bUp'+row,
     				value: "Up"
-    			}));
-    		$('#bUp'+row).click(function() { onUpClick(ticketId); });
+    			})).click(function() { onUpClick(ticketId); });
     	}
     });
 
-    table.setColRenderer("buttonDown", function(rowSelector, model, row, col) {
+    // set a column renderer to display a button
+    table.setColRenderer("buttonDown", function($dRow, model, row, col) {
     	var ticketId=model.getValue(row, "ticket");
-    	$(rowSelector).append($("<td>", { text: ""}));
+    	var $field=$('<td>');
+    	$dRow.append($field);
     	if(row<model.size()-1) { // not on last row
-    		$(rowSelector+" td:last").append($("<input>", {
+    		$field.append($("<input>", {
 					type: 'button',
     				id:   'bDown'+row,
     				value: "Down"
-    			}));
-    		$('#bDown'+row).click(function() { onDownClick(ticketId); });
+    			})).click(function() { onDownClick(ticketId); });
     	}
     });
 
-    table.setColRenderer("buttonDel", function(rowSelector, model, row, col) {
+    // set a column renderer to display a button
+    table.setColRenderer("buttonDel", function($dRow, model, row, col) {
     	var ticketId=model.getValue(row, "ticket");
-    	$(rowSelector).append($("<td>", { text: ""}));
-    	$(rowSelector+" td:last").append($("<input>", {
+    	var $field=$('<td>');
+    	$dRow.append($field);
+    	$field.append($("<input>", {
 				type: 'button',
     			id:   'bDel'+row,
     			value: "Del"
-    		}));
-    	$('#bDel'+row).click(function() { onDelClick(ticketId); });
+    		})).click(function() { onDelClick(ticketId); });
     });
 
+    // create the input form
+    
+    // initially load the table data from the backend
     loadData();
 }
 

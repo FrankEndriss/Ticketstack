@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /** Simple database for TicketEntry objects.
- * TODO: implement writing access
+ * TODO: implement persistence
  */
 public class TicketDB {
 	
