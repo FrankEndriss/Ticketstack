@@ -38,4 +38,16 @@ public class TicketEntryResource {
 		TicketDB.moveTicketUp(id);
 	}
 	
+	@POST
+	@Path("{id}/down")
+	public void moveTicketDown(@PathParam("id") final String id) {
+		TicketDB.moveTicketDown(id);
+	}
+	
+	@POST
+	@Path("{id}/delete")
+	public void deleteTicket(@PathParam("id") final String id) {
+		TicketDB.removeTicketEntry(id);
+	}
+	
 }

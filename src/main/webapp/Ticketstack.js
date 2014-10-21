@@ -243,24 +243,7 @@ function writeList() {
 }
 */
 
-/** Called if up-button of ticket ticketId was clicked */
-/*
-function onUpClick(event) {
-	log("onUpClick("+event+")");
-   	xmlHttp = new XMLHttpRequest();
-   	xmlHttp.onreadystatechange = onUpClickReturned(xmlHttp);
-   	xmlHttp.open( "POST", "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/up", true);
-   	xmlHttp.send( null );
-}
 
-function onUpClickReturned(xmlHttp) {
-	if(xmlHttp.readyState!=4 || xmlHttp.status!=200) {
-		log("onUpClickReturned, return");
-		return;
-	} else 
-		loadData();
-}
-*/
 
 function ticketlist_xml2json(xmlData) {
 	log("ticketlist_xml2json, xmlData="+xmlData+" len="+xmlData.childNodes.length);
@@ -299,8 +282,8 @@ function writeFooter() {
 
 function TicketstackBody(tableParent) {
     var model=new TSTableModel();
-    model.setColHeaders([ "Ticket", "Text" ]);
-    model.setColumns([ "ticket", "text" ]);
+    model.setColHeaders([ "Up", "Down", "Ticket", "Text", "Delete" ]);
+    model.setColumns([ "buttonUp", "buttonDown", "ticket", "text", "buttonDel" ]);
     
     var loadData=function() {
 		$.ajax({
@@ -315,6 +298,51 @@ function TicketstackBody(tableParent) {
 		});
     };
 
+    /** Called if down-button of ticket ticketId was clicked */
+    var onDownClick=function(ticketId) {
+    	log("onUpClick("+ticketId+")");
+    	$.ajax({
+    		type: "POST",
+    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/down",
+    		success: function(data, status, jqXHR) {
+    			loadData();
+    		},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert("Ticket down failed: "+textStatus);
+			}
+    	});
+	};
+
+    /** Called if up-button of ticket ticketId was clicked */
+    var onUpClick=function(ticketId) {
+    	log("onUpClick("+ticketId+")");
+    	$.ajax({
+    		type: "POST",
+    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/up",
+    		success: function(data, status, jqXHR) {
+    			loadData();
+    		},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert("Ticket up failed: "+textStatus);
+			}
+    	});
+	};
+
+    /** Called if del-button of ticket ticketId was clicked */
+    var onDelClick=function(ticketId) {
+    	log("onDelClick("+ticketId+")");
+    	$.ajax({
+    		type: "POST",
+    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/delete",
+    		success: function(data, status, jqXHR) {
+    			loadData();
+    		},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert("Ticket delete failed: "+textStatus);
+			}
+    	});
+	};
+
     log("creating table as child of: "+tableParent);
 
     var table=new TSTable(tableParent, model);
@@ -327,6 +355,43 @@ function TicketstackBody(tableParent) {
 				href: 'https://support.neo-business.info/browse/'+ticketId,
 				text: ticketId
     		}));
+    });
+    
+    table.setColRenderer("buttonUp", function(rowSelector, model, row, col) {
+    	var ticketId=model.getValue(row, "ticket");
+    	$(rowSelector).append($("<td>", { text: ""}));
+    	if(row>0) { // not on first row
+    		$(rowSelector+" td:last").append($("<input>", {
+					type: 'button',
+    				id:   'bUp'+row,
+    				value: "Up"
+    			}));
+    		$('#bUp'+row).click(function() { onUpClick(ticketId); });
+    	}
+    });
+
+    table.setColRenderer("buttonDown", function(rowSelector, model, row, col) {
+    	var ticketId=model.getValue(row, "ticket");
+    	$(rowSelector).append($("<td>", { text: ""}));
+    	if(row<model.size()-1) { // not on last row
+    		$(rowSelector+" td:last").append($("<input>", {
+					type: 'button',
+    				id:   'bDown'+row,
+    				value: "Down"
+    			}));
+    		$('#bDown'+row).click(function() { onDownClick(ticketId); });
+    	}
+    });
+
+    table.setColRenderer("buttonDel", function(rowSelector, model, row, col) {
+    	var ticketId=model.getValue(row, "ticket");
+    	$(rowSelector).append($("<td>", { text: ""}));
+    	$(rowSelector+" td:last").append($("<input>", {
+				type: 'button',
+    			id:   'bDel'+row,
+    			value: "Del"
+    		}));
+    	$('#bDel'+row).click(function() { onDelClick(ticketId); });
     });
 
     loadData();

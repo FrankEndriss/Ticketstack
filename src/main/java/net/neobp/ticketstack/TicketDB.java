@@ -26,11 +26,18 @@ public class TicketDB {
 	}
 	
 	public static List<TicketEntry> getAllTicketEntries() {
-		return new ArrayList<TicketEntry>(tickets.values());
+		List<TicketEntry> retList=new ArrayList<TicketEntry>(tickets.values());
+		Collections.sort(retList, prioComparator);
+		return retList;
 	}
 	
-	public static void removeTicketEntry(final String ticket) {
-		tickets.remove(ticket);
+	/** Removes a TicketEntry
+	 * @param ticket
+	 * @return true if found and removed, false if notfound
+	 */
+	public static void removeTicketEntry(final String id) {
+		if(tickets.remove(id)==null)
+			throw new IllegalArgumentException("notfound: "+id);
 	}
 	
 	/** Update/Insert of ticket. ticket.getTicket() must not be null, primaryKey.
@@ -48,8 +55,25 @@ public class TicketDB {
 			}
 		};
 
-	private static void sortByPrio(List<TicketEntry> ticketList) {
-		Collections.sort(ticketList, prioComparator);
+	/** Swap priority with the ticket in the list just after this ticket.
+	 * Synchronized since two tickets are updated atomically
+	 * @param id of the ticket to move down
+	 */
+	public static synchronized void moveTicketDown(final String id) {
+		final TicketEntry ticketEntry=getTicketEntry(id);
+		if(ticketEntry==null)
+			throw new IllegalArgumentException("notfound: "+id);
+		
+		List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
+		Collections.sort(entries, prioComparator);
+		
+		int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
+		System.out.println("found at: "+idx);
+		if(idx>=0 && idx<entries.size()-1) { // found and not last, swap prio with next ticket
+			int nextPrio=entries.get(idx+1).getPrio();
+			entries.get(idx+1).setPrio(ticketEntry.getPrio());
+			ticketEntry.setPrio(nextPrio);
+		}
 	}
 
 	/** Swap priority with the ticket in the list just before this ticket.
@@ -62,11 +86,11 @@ public class TicketDB {
 			throw new IllegalArgumentException("notfound: "+id);
 		
 		List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
-		sortByPrio(entries);
+		Collections.sort(entries, prioComparator);
 		
 		int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
 		System.out.println("found at: "+idx);
-		if(idx>0) { // found and not first
+		if(idx>0) { // found and not first, swap prio with previous ticket
 			int prevPrio=entries.get(idx-1).getPrio();
 			entries.get(idx-1).setPrio(ticketEntry.getPrio());
 			ticketEntry.setPrio(prevPrio);
