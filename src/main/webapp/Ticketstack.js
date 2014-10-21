@@ -291,7 +291,7 @@ function TicketstackBody(tableParent, inputParent) {
     var onDelClick=function(ticketId) {
     	log("onDelClick("+ticketId+")");
     	$.ajax({
-    		type: "POST",
+    		type: "DELETE",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/delete",
     		success: function(data, status, jqXHR) {
     			// TODO optimize to delete row in model instead of reload data
@@ -380,6 +380,19 @@ function TicketstackBody(tableParent, inputParent) {
     		var newText=$('#ts_app_inp_text').val();
 
     		log("fake adding: ticket:"+newTicket+" text:"+newText);
+    		$.ajax({
+    			type: "POST",
+    			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
+    			contentType: 'application/xml',
+    			data: { ticket: newTicket, text: newText, prio: -1 },
+    			success: function(data, status, jqXHR) {
+    				// TODO optimize to insert row in model instead of reload data
+    				loadData();
+    			},
+    			error: function(jqXHR, textStatus, errorThrown) {
+    				alert("Ticket creation failed: "+textStatus+" "+errorThrown);
+    			}
+    		});
     	}));
 
     

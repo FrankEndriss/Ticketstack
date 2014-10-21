@@ -2,6 +2,8 @@ package net.neobp.ticketstack;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,13 +19,16 @@ public class TicketEntryResource {
 	/**@return List of all TicketEntries */
 	@GET
 //	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_XML)
 	public List<TicketEntry> getAllTicketEntries() {
+		System.out.println("getAllTicketEntries() called");
 		return TicketDB.getAllTicketEntries();
 	}
 	
 	@POST
+	@Consumes(MediaType.APPLICATION_XML)
 	public void insertTicket(final TicketEntry ticketEntry) {
+		System.out.println("insertTicket called, "+ticketEntry.getTicket());
 		TicketDB.insertTicket(ticketEntry);
 	}
 	
@@ -49,7 +54,7 @@ public class TicketEntryResource {
 		TicketDB.moveTicketDown(id);
 	}
 	
-	@POST
+	@DELETE
 	@Path("{id}/delete")
 	public void deleteTicket(@PathParam("id") final String id) {
 		TicketDB.removeTicketEntry(id);
