@@ -85,11 +85,19 @@ function TSTableModel() {
 		this.fireEvent(new TSTableEvent("moved", ticket, fromIdx, fromIdx+offset));
 	}
 
+	/** Returns the object to display at the table-row[row]
+	 * @param row the index of the row
+	 */
+	this.getRow=function(row) {
+		return ticketList[row];
+	}
+
 	/** Returns the value to display at the table-field [row, field]
 	 * field may be a property-name or an index.
+	 * Aequivalent to getRow(row)[field]
 	 */
 	this.getValue=function(row, field) {
-		return ticketList[row][field];
+		return this.getRow(row)[field];
 	}
 	
 	/** Call this method after the data of a row changed. If only one field changed,
@@ -97,7 +105,6 @@ function TSTableModel() {
 	 * @public
 	 */
 	this.rowChanged=function(row, field) {
-		field=field || -1;
 		this.fireEvent(new TSTableEvent("changed", ticketList[row], row, field));
 	}
 
@@ -108,6 +115,16 @@ function TSTableModel() {
 		}
 	}
 	
+}
+
+function TSDefaultRenderer(create, update) {
+	this.create=create || function($td, model, row, col) {
+		$td.text(model.getValue(row, col)));
+	};
+	this.update=update || function($td, model, row, col) {
+   		$td.children().remove();
+   		this.create($td, model, row, col);
+	};
 }
 
 /** global table counter, used for html tableID */
@@ -123,19 +140,21 @@ function TSTable(domParent, model) {
 	var tableID="tstable_"+(++tabC);
 	var $table;
 	
-	/** Map of functions creating the td-tags within the table */
-	var tdCreators=new Object();
+	/** Map of render objects capable of creating and updating the td-tags within the table */
+	var colRenderers=new Object();
 	
 	/** Called when any td of the table must be created.
 	 * Calls the column renderers to do so.
 	 */
 	var createTD=function($dRow, row, col) {
 		log("creating <td> for row, sel="+$dRow+" row="+row+" col="+col+" value="+model.getValue(row, col));
-		if(tdCreators[col]) {
-			log("using tdCreator: "+tdCreators[col]);
-			tdCreators[col]($dRow, model, row, col);
+		$newTD=$('<td>');
+		$dRow.append(newTD);
+		if(colRenderers[col]) {
+			log("using colRenderers: "+colRenderers[col]);
+			colRenderers[col].create($newTD, model, row, col);
 		} else { // default implementation
-			$dRow.append($('<td>').text(model.getValue(row, col)));
+			$newTD.text(model.getValue(row, col)));
 		}
 	}
 
@@ -151,11 +170,11 @@ function TSTable(domParent, model) {
 	 * 
 	 * @public
 	 */
-	this.setColRenderer=function(row, renderer) {
-		tdCreators[row]=renderer;
+	this.setColRenderer=function(col, renderer) {
+		colRenderers[col]=renderer;
 	}
 
-	/** Rerenders the complete table.
+	/** Rerenders the complete table, and replaces a previously created one by the new one.
 	 * @private
 	 */
 	var render=function() {
@@ -315,29 +334,33 @@ function TicketstackBody(tableParent, inputParent) {
     var table=new TSTable(tableParent, model);
     
     // set a column renderer to display a link, not only the text
-    table.setColRenderer("ticket", function($dRow, model, row, col) {
-    	var ticketId=model.getValue(row, col);
-    	var $field=$('<td>');
-    	$dRow.append($field);
-    	$field.append($("<a>", {
-				href: 'https://support.neo-business.info/browse/'+ticketId,
-				text: ticketId
-    		}));
-    });
+    table.setColRenderer("ticket", 
+    	new TSDefaultRenderer(
+    		function($td, model, row, col) {
+    			var ticketId=model.getValue(row, col);
+    			$td.append($("<a>", {
+					href: 'https://support.neo-business.info/browse/'+ticketId,
+					text: ticketId
+    			}))
+    		}
+    	)
+    );
     
     // set a column renderer to display a button
-    table.setColRenderer("buttonUp", function($dRow, model, row, col) {
-    	var ticketId=model.getValue(row, "ticket");
-    	var $field=$('<td>');
-    	$dRow.append($field);
-    	if(row>0) { // not on first row
-    		$field.append($("<input>", {
-					type: 'button',
-    				id:   'bUp'+row,
-    				value: "Up"
-    			})).click(function() { onUpClick(ticketId); });
-    	}
-    });
+    table.setColRenderer("buttonUp",
+    	new TSDefaultRenderer(
+    		function($td, model, row, col) {
+    			var ticketId=model.getValue(row, "ticket");
+    			if(row>0) { // not on first row
+    				$td.append($("<input>", {
+    					type: 'button',
+    					id:   'bUp'+row,
+    					value: "Up"
+    				})).click(function() { onUpClick(ticketId); });
+    			}
+    		}
+    	)
+    );
 
     // set a column renderer to display a button
     table.setColRenderer("buttonDown", function($dRow, model, row, col) {
