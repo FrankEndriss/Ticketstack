@@ -33,7 +33,7 @@ function TSTableModel() {
 	}
 
 	this.setColHeaders=function(colHeaders) {
-		colHea=colHeaders;
+		this.colHea=colHeaders;
 		this.fireEvent(new TSTableEvent("metaChange", null));
 	}
 
@@ -67,6 +67,13 @@ function TSTableModel() {
 		this.fireEvent(new TSTableEvent("inserted", ticketEntry, idx));
 	}
 	
+	this.indexOf=function(ticket) {
+		for(var idx=0; idx<ticketList.length; idx++)
+			if(ticket==ticketList[idx])
+				return idx;
+		return -1;
+	}
+
 	/** @public */
 	this.remove=function(idx) {
 		var ticket=ticketList[idx];
@@ -119,7 +126,7 @@ function TSTableModel() {
 
 function TSDefaultRenderer(create, update) {
 	this.create=create || function($td, model, row, col) {
-		$td.text(model.getValue(row, col)));
+		$td.text(model.getValue(row, col));
 	};
 	this.update=update || function($td, model, row, col) {
    		$td.children().remove();
@@ -139,6 +146,7 @@ function TSTable(domParent, model) {
 
 	var tableID="tstable_"+(++tabC);
 	var $table;
+	var defaultRenderer=new TSDefaultRenderer();
 	
 	/** Map of render objects capable of creating and updating the td-tags within the table */
 	var colRenderers=new Object();
@@ -149,12 +157,12 @@ function TSTable(domParent, model) {
 	var createTD=function($dRow, row, col) {
 		log("creating <td> for row, sel="+$dRow+" row="+row+" col="+col+" value="+model.getValue(row, col));
 		$newTD=$('<td>');
-		$dRow.append(newTD);
+		$dRow.append($newTD);
 		if(colRenderers[col]) {
 			log("using colRenderers: "+colRenderers[col]);
 			colRenderers[col].create($newTD, model, row, col);
-		} else { // default implementation
-			$newTD.text(model.getValue(row, col)));
+		} else { 
+			defaultRenderer.create($newTD, model, row, col);
 		}
 	}
 
@@ -212,10 +220,12 @@ function TSTable(domParent, model) {
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
+		/*
 		if(evt.type==='removed') {
 			log("$table.remove on event, idx="+(evt.idx1+1));
 			$table.find('tr').eq(evt.idx1+1).remove();
 		} else
+		*/
 			render();
 	}
 
@@ -312,14 +322,14 @@ function TicketstackBody(tableParent, inputParent) {
 	};
 
     /** Called if del-button of ticket ticketId was clicked */
-    var onDelClick=function(ticketId, row) {
-    	log("onDelClick("+ticketId+', '+row+")");
-    	model.remove(row);
+    var onDelClick=function(ticket) {
+    	log("onDelClick("+ticket.ticket)+");";
+    	model.remove(model.indexOf(ticket));
     	$.ajax({
     		type: "POST",
-    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/delete",
+    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticket.ticket+"/delete",
     		success: function(data, status, jqXHR) {
-    			log("onDelClick:success, calling model.remove");
+    			log("onDelClick:success"+ticket.ticket);
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
 				loadData();
@@ -363,30 +373,34 @@ function TicketstackBody(tableParent, inputParent) {
     );
 
     // set a column renderer to display a button
-    table.setColRenderer("buttonDown", function($dRow, model, row, col) {
-    	var ticketId=model.getValue(row, "ticket");
-    	var $field=$('<td>');
-    	$dRow.append($field);
-    	if(row<model.size()-1) { // not on last row
-    		$field.append($("<input>", {
-					type: 'button',
-    				id:   'bDown'+row,
-    				value: "Down"
-    			})).click(function() { onDownClick(ticketId); });
-    	}
-    });
+    table.setColRenderer("buttonDown", 
+    	new TSDefaultRenderer(
+    		function($td, model, row, col) {
+    			var ticketId=model.getValue(row, "ticket");
+    			if(row<model.size()-1) { // not on last row
+    				$td.append($("<input>", {
+    					type: 'button',
+    				  	id:   'bDown'+row,
+    				  	value: "Down"
+    				})).click(function() { onDownClick(ticketId); });
+    			}
+    		}
+    	)	
+    );
 
     // set a column renderer to display a button
-    table.setColRenderer("buttonDel", function($dRow, model, row, col) {
-    	var ticketId=model.getValue(row, "ticket");
-    	var $field=$('<td>');
-    	$dRow.append($field);
-    	$field.append($("<input>", {
-				type: 'button',
-    			id:   'bDel'+row,
-    			value: "Del"
-    		})).click(function() { onDelClick(ticketId, row); });
-    });
+    table.setColRenderer("buttonDel", 
+    	new TSDefaultRenderer(
+    		function($td, model, row, col) {
+    			var ticket=model.getRow(row);
+    			$td.append($("<input>", {
+    				type: 'button',
+    				//id:   'bDel'+row,
+    				value: "Del"
+    			})).click(function() { onDelClick(ticket); });
+    		}
+    	)
+    );
 
     // create the input form
     // TODO extract class
