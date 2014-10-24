@@ -233,6 +233,31 @@ function TSTable(domParent, model) {
 	render();
 }
 
+/** Converts a ticketentry to xml 
+ * @param ticketentry an object according to ticketlist_xml2json
+ * @return a XMLDocument containing the ticketentry
+ */
+function ticketlist_json2xml(ticketentry) {
+	var xmlDoc=$.parseXML('<ticketentry><ticket></ticket><text></text><prio></prio></ticketentry>');
+	var $xml=$(xmlDoc);
+	$xml.find('ticket').text(ticketentry.ticket);
+	$xml.find('text').text(ticketentry.text);
+	$xml.find('prio').text(ticketentry.prio);
+	log("created XMLDocument: "+xmlDoc);
+	var retString;
+	if(xmlDoc.xml)
+		retString=xmlDoc.xml;
+	else
+		retString=(new XMLSerializer()).serializeToString(xmlDoc);
+	log("created XMLDocuments xml: "+retString);
+	return retString;
+}
+
+/** Converts a XMLDocument containing <ticketEntry> elements into
+ * an array of json objects
+ * @param xmlData
+ * @returns {Array} of json objects
+ */
 function ticketlist_xml2json(xmlData) {
 	log("ticketlist_xml2json, xmlData="+xmlData+" len="+xmlData.childNodes.length);
 	var tickets=xmlData.getElementsByTagName("ticketEntry");
@@ -427,7 +452,8 @@ function TicketstackBody(tableParent, inputParent) {
     			type: "POST",
     			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
     			contentType: 'application/xml',
-    			data: { ticket: newTicket, text: newText, prio: -1 },
+    			data: ticketlist_json2xml({ ticket: newTicket, text: newText, prio: -1 }),
+    			dataType: "text",
     			success: function(data, status, jqXHR) {
     				// TODO optimize to insert row in model instead of reload data
     				loadData();
