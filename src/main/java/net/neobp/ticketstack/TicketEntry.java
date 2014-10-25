@@ -5,6 +5,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TicketEntry {
 	
+	public TicketEntry() {
+		// jaxb needs this
+	}
+
 	private String ticket;
 	private String text;
 	private int prio;

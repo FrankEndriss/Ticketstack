@@ -26,7 +26,7 @@ public class TicketEntryResource {
 	}
 	
 	@POST
-	@Consumes(MediaType.APPLICATION_XML)
+	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public void insertTicket(final TicketEntry ticketEntry) {
 		System.out.println("insertTicket called, "+ticketEntry.getTicket());
 		TicketDB.insertTicket(ticketEntry);

@@ -448,12 +448,15 @@ function TicketstackBody(tableParent, inputParent) {
     		var newText=$('#ts_app_inp_text').val();
 
     		log("fake adding: ticket:"+newTicket+" text:"+newText);
+    		// onAddClicked()
     		$.ajax({
-    			type: "POST",
-    			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
-    			contentType: 'application/xml',
-    			data: ticketlist_json2xml({ ticket: newTicket, text: newText, prio: -1 }),
-    			dataType: "text",
+    			type: 'POST',
+    			url: 'http://localhost:8080/Ticketstack/rest/TicketEntryResource',
+//    			contentType: 'application/xml',
+ //   			data: ticketlist_json2xml({ ticket: newTicket, text: newText, prio: -1 }),
+    			contentType: 'application/json',
+    			data: JSON.stringify({ ticket: newTicket, text: newText, prio: -1 }),
+    			dataType: 'json',
     			success: function(data, status, jqXHR) {
     				// TODO optimize to insert row in model instead of reload data
     				loadData();

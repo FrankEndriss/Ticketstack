@@ -44,20 +44,23 @@ public class TicketDB {
 	 * Prios of all other Tickets are adjusted
 	 * @param ticketEntry
 	 */
-	public static void insertTicket(final TicketEntry ticketEntry) {
+	public synchronized static void insertTicket(final TicketEntry ticketEntry) {
 		if(tickets.get(ticketEntry.getTicket())!=null)
 			throw new IllegalArgumentException("ticket exists");
 			
-		final List<TicketEntry> tickets=getAllTicketEntries();
+		final List<TicketEntry> ltickets=getAllTicketEntries();
+
 		// Prio of new ticket
-		final int firstPrio=tickets.size()>0?
-				tickets.get(0).getPrio():
+		final int firstPrio=ltickets.size()>0?
+				ltickets.get(0).getPrio():
 				1;
 		ticketEntry.setPrio(firstPrio);
 		// adjust prio of all other tickets
-		for(TicketEntry te : tickets) {
+		for(TicketEntry te : ltickets) {
 			te.setPrio(te.getPrio()+1);
 		}
+		
+		tickets.put(ticketEntry.getTicket(), ticketEntry);
 		
 	}
 	
