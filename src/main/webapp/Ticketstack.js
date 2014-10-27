@@ -427,21 +427,33 @@ function TicketstackBody(tableParent, inputParent) {
     	)
     );
 
-    // create the input form
-    // TODO extract class
-    inputParent.append($('<input>', {
+    $form=$('<form>').css('width', '400px');
+    //$form=$('<form>').css('padding', '15px');
+    $div=$('<div>').appendTo($form);
+    
+    $('<label>', {
+    	for: 'ts_app_inp_ticket'
+    }).text('TicketID').appendTo($div);
+
+    $div.append($('<input>', {
     	type: 'text',
     	id: 'ts_app_inp_ticket',
-    	label: 'Ticket'
     }));
-    inputParent.append($('<input>', {
-    	type: 'text',
+    
+    $('<label>', {
+    	for: 'ts_app_inp_text'
+    }).text('Text').appendTo($div);
+
+    $div.append($('<textarea>', {
     	id: 'ts_app_inp_text',
-    	label: 'Text'
+    	label: 'Text',
+    	rows: 10,
+    	cols: 80
     }));
-    inputParent.prepend($('<input>', {
+
+    $div.append($('<input>', {
+    	id: 'addButton',
     	type: 'button',
-    	id: 'bAdd',
     	value: 'Add'
     	}).click(function() {
     		var newTicket=$('#ts_app_inp_ticket').val();
@@ -466,6 +478,13 @@ function TicketstackBody(tableParent, inputParent) {
     			}
     		});
     	}));
+    
+    $div.children('label').css('float', 'left');
+    $div.children('input').css('float', 'right');
+    $div.children('textarea').css('float', 'right');
+    $div.children('#addButton').css('float', 'bottom');
+
+    inputParent.append($form);
 
     
     // initially load the table data from the backend
@@ -475,11 +494,17 @@ function TicketstackBody(tableParent, inputParent) {
 //erzeugt den <body> der Seite, soll auf Seite mit leerem body aufgerufen werden.
 function startTicketstackApp() {
 	log("in startTicketstackApp()");
-	// creates 3 divs in <body> of page
+
+	// creates 4 divs in <body> of page
 	var divIDs=[ "ts_appHeader", "ts_appTable", "ts_appInput", "ts_appFooter" ];
 	for(var i=0; i<divIDs.length; i++) {
-		$("body:first").append('<div id="'+divIDs[i]+'" class="ts_topLevelDiv" ></div>');
+		$div=$('<div id="'+divIDs[i]+'"></div>');
+		$div.css('align-content', 'stretch');
+		$div.addClass('ts_topLevelDiv')
+		$("body:first").append($div).css('align-content', 'flex-start');
 	}
+	$("body:first").css('align-content', 'flex-start');
+
     writeHeader();
     writeFooter();
     log("startup...");

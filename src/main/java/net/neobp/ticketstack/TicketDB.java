@@ -1,5 +1,6 @@
 package net.neobp.ticketstack;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class TicketDB {
 	 * This is a map TicketEntry.getTicket() -> TicketEntry
 	 **/
 	private final static Map<String, TicketEntry> tickets=new HashMap<String, TicketEntry>();
+	
+	/** Database directory, injected in init() */
+	private static File dbDir;
 	
 	static {
 		// TODO move to servlet initialization code
@@ -207,6 +211,7 @@ public class TicketDB {
 	/** Wipes out the complete database.
 	 * TODO: Wenn Mandantenfähig, dann wipe(mandant)
 	 */
+	/*
 	public static void wipe() {
 		tickets.clear();
 
@@ -229,6 +234,17 @@ public class TicketDB {
 		t3.setPrio(1);
 		tickets.put(t3.getTicket(), t3);
 	}
-	/*
 	*/
+
+	/** Injection of database directory path.
+	 * @param pdbDir where the data is stored, this needs to be a path to a directory, or a path where a 
+	 * directory can be created. Obviously the directory must be readable and writable.
+	 */
+	public static void init(final String pdbDir) {
+		dbDir=new File(pdbDir);
+		if(!dbDir.exists())
+			dbDir.mkdirs();
+		if(!dbDir.isDirectory() || !dbDir.canRead() || !dbDir.canWrite())
+			throw new IllegalArgumentException("something wrong with dbDir: "+dbDir.getAbsolutePath());
+	}
 }

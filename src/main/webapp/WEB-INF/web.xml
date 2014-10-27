@@ -25,6 +25,12 @@
 			<param-name>com.sun.jersey.config.feature.Trace</param-name>
 			<param-value>true</param-value>
 		</init-param>
+		
+		<!-- Ticketstack database directory -->
+		<init-param>
+			<param-name>net.neobp.ticketstack.database</param-name>
+			<param-value>/home/frank/.Ticketstack.db</param-value>
+		</init-param>
       
 		<load-on-startup>1</load-on-startup>
 	</servlet>
