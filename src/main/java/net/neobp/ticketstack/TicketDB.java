@@ -1,14 +1,20 @@
 package net.neobp.ticketstack;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /** Simple database for TicketEntry objects.
- * TODO: implement persistence
  */
 public class TicketDB {
 	
@@ -17,10 +23,79 @@ public class TicketDB {
 	 **/
 	private final static Map<String, TicketEntry> tickets=new HashMap<String, TicketEntry>();
 	
-	static { // test data
-		wipe();
+	static {
+		// TODO move to servlet initialization code
+		load();
 	}
 	
+	private final static String DATAFILE="C:\\cygwin64\\home\\fendriss\\doc\\ticketstack.properties";
+
+	/** Loads data from persistence to member tickets
+	 */
+	private static void load() {
+		InputStream in=null;
+		try {
+			in=new FileInputStream(DATAFILE);
+		}catch(Exception e) {
+			throw new RuntimeException("PersistenceException while loading, data not readable", e) ;
+		}
+		
+		Properties props=new Properties();
+		try {
+			props.load(in);
+		} catch (IOException e) {
+			throw new RuntimeException("PersistenceException while loading data", e) ;
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+		
+		int i=0;
+		while(true) {
+			final String propId="_ticket_"+(i++);
+			String ticketId=props.getProperty(propId);
+			if(ticketId==null)
+				break;
+			
+			TicketEntry ticketEntry=new TicketEntry();
+			ticketEntry.setTicket(ticketId);
+			ticketEntry.setText(props.getProperty(propId+".text", ""));
+			ticketEntry.setPrio(Integer.parseInt(props.getProperty(propId+".prio", "0")));
+			tickets.put(ticketId, ticketEntry);
+		}
+	}
+	
+	/** Saves member tickets to persistence
+	 */
+	private static void save() {
+		// fairly simple format using Properties
+		// for every ticket there is an entry "_ticket_<some_number>=<ticketId>"
+		// and for every entry of _ticket_<number> there are two more entries
+		// _ticket_<some_number>.prio=<number>, and
+		// _ticket_<some_number>.text=<text>
+
+		final Properties props=new Properties();
+		int i=0;
+		for(TicketEntry t : tickets.values()) {
+			final String propId="_ticket_"+(i++);
+			props.put(propId, t.getTicket());
+			props.put(propId+".prio", ""+t.getPrio());
+			props.put(propId+".text", ""+t.getText());
+		}
+		
+		OutputStream out=null;
+		try {
+			out=new FileOutputStream(DATAFILE);
+			props.store(out, "saved on "+new Date());
+			out.close();
+		}catch(Exception e) {
+			throw new RuntimeException("PersistenceException while saving", e) ;
+		}
+	}
+
 	public static TicketEntry getTicketEntry(final String id) {
 		return tickets.get(id);
 	}
@@ -35,9 +110,10 @@ public class TicketDB {
 	 * @param ticket
 	 * @return true if found and removed, false if notfound
 	 */
-	public static void removeTicketEntry(final String id) {
+	public static synchronized void removeTicketEntry(final String id) {
 		if(tickets.remove(id)==null)
 			throw new IllegalArgumentException("notfound: "+id);
+		save();
 	}
 	
 	/** Inserts the ticket ticketEntry as first ticket.
@@ -61,14 +137,19 @@ public class TicketDB {
 		}
 		
 		tickets.put(ticketEntry.getTicket(), ticketEntry);
-		
+		save();
 	}
 	
 	/** Update/Insert of ticket. ticket.getTicket() must not be null, primaryKey.
 	 * @param ticket the updated ticket
 	 */
-	public static void upsertTicketEntry(final TicketEntry ticket) {
-		tickets.put(ticket.getTicket(), ticket);
+	public static synchronized void updateTicketEntry(final TicketEntry ticket) {
+		final TicketEntry lTicket=tickets.get(ticket.getTicket());
+		if(lTicket==null)
+			throw new RuntimeException("Notfound ticket: "+ticket.getTicket());
+
+		lTicket.setText(ticket.getText()!=null?ticket.getText():"");
+		save();
 	}
 	
 
@@ -98,6 +179,7 @@ public class TicketDB {
 			entries.get(idx+1).setPrio(ticketEntry.getPrio());
 			ticketEntry.setPrio(nextPrio);
 		}
+		save();
 	}
 
 	/** Swap priority with the ticket in the list just before this ticket.
@@ -119,6 +201,7 @@ public class TicketDB {
 			entries.get(idx-1).setPrio(ticketEntry.getPrio());
 			ticketEntry.setPrio(prevPrio);
 		}
+		save();
 	}
 
 	/** Wipes out the complete database.
@@ -146,4 +229,6 @@ public class TicketDB {
 		t3.setPrio(1);
 		tickets.put(t3.getTicket(), t3);
 	}
+	/*
+	*/
 }

@@ -1,8 +1,17 @@
-* Ticketliste Sortieren nach prio
-* Buttons "priohoch"/"priorunter"
-* Server: Update, Create, Delete
 * Textbearbeitung
-* Button "löschen"
-* Button "neu"
 * Wiedervorlage, Datum
 * Trennung js / html
+* Database dir konfigurierbar
+* Userverwaltung
+** login screen
+** pw-hash auf client und server
+** check jsessionid
+
+
+Login/Pw
+--------
+*Client soll PW nicht schicken, sondern CRC des pw
+*Um den CRC des PW gegen ausspähen wärend der Übertragung zu schützen kann
+ der Server seinen asymetric public key über einen Request verfügbar machen. Das CRC/PW ist dann auf 
+ Client-Seite mit diesem Key zu verschlüsseln.
+*Einfacher ist ggf die verwendung von HTTPS

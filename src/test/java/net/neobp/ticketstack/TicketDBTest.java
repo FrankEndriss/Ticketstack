@@ -39,11 +39,11 @@ public class TicketDBTest {
 	}
 
 	@Test
-	public void testUpsertTicketEntry_update() {
+	public void testUpdateTicketEntry() {
 		TicketEntry ticket=TicketDB.getTicketEntry("SENVION_W-65");
-		final String testtext="my text asdhaoshga";
+		final String testtext="changed text";
 		ticket.setText(testtext);
-		TicketDB.upsertTicketEntry(ticket);
+		TicketDB.updateTicketEntry(ticket);
 
 		// query again
 		ticket=TicketDB.getTicketEntry("SENVION_W-65");
@@ -52,20 +52,6 @@ public class TicketDBTest {
 		// check list size
 		final List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
 		assertEquals("must still be 3 tickets", 3, tickets.size());
-	}
-
-	@Test
-	public void testUpsertTicketEntry_insert() {
-		final String newTicketId="newTicket42";
-		TicketEntry ticket=new TicketEntry();
-		ticket.setTicket(newTicketId);
-		TicketDB.upsertTicketEntry(ticket);
-
-		// check list size
-		final List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
-		assertEquals("must be 4 tickets now", 4, tickets.size());
-		
-		// TODO: check prio
 	}
 
 	@Test
