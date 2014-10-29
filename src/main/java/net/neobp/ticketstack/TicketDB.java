@@ -3,6 +3,7 @@ package net.neobp.ticketstack;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,20 +27,14 @@ public class TicketDB {
 	
 	/** Database directory, injected in init() */
 	private static File dbDir;
+	private static File dbFile;
 	
-	static {
-		// TODO move to servlet initialization code
-		load();
-	}
-	
-	private final static String DATAFILE="C:\\cygwin64\\home\\fendriss\\doc\\ticketstack.properties";
-
 	/** Loads data from persistence to member tickets
 	 */
 	private static void load() {
 		InputStream in=null;
 		try {
-			in=new FileInputStream(DATAFILE);
+			in=new FileInputStream(dbFile);
 		}catch(Exception e) {
 			throw new RuntimeException("PersistenceException while loading, data not readable", e) ;
 		}
@@ -92,7 +87,7 @@ public class TicketDB {
 		
 		OutputStream out=null;
 		try {
-			out=new FileOutputStream(DATAFILE);
+			out=new FileOutputStream(dbFile);
 			props.store(out, "saved on "+new Date());
 			out.close();
 		}catch(Exception e) {
@@ -239,12 +234,25 @@ public class TicketDB {
 	/** Injection of database directory path.
 	 * @param pdbDir where the data is stored, this needs to be a path to a directory, or a path where a 
 	 * directory can be created. Obviously the directory must be readable and writable.
+	 * @throws IOException 
 	 */
-	public static void init(final String pdbDir) {
+	public static void init(final String pdbDir) throws IOException {
 		dbDir=new File(pdbDir);
-		if(!dbDir.exists())
+		if(!dbDir.exists()) {
 			dbDir.mkdirs();
+		}
 		if(!dbDir.isDirectory() || !dbDir.canRead() || !dbDir.canWrite())
 			throw new IllegalArgumentException("something wrong with dbDir: "+dbDir.getAbsolutePath());
+		
+		dbFile=new File(dbDir, "ticketstack.db");
+		if(!dbFile.exists()) {
+			FileWriter fw=new FileWriter(dbFile);
+			fw.write("// Ticketstack init");
+			fw.close();
+		}
+		if(dbFile.isDirectory() || !dbFile.canRead() || !dbFile.canWrite())
+			throw new IllegalArgumentException("something wrong with dbFile: "+dbFile.getAbsolutePath());
+
+		load();
 	}
 }

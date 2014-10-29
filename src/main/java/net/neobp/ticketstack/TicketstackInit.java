@@ -11,7 +11,12 @@ public class TicketstackInit implements ServletContextListener {
 	@Override
 	public void contextInitialized(final ServletContextEvent evt) {
 		String dbDir=evt.getServletContext().getInitParameter("net.neobp.ticketstack.database");
-		TicketDB.init(dbDir);
+		try {
+			TicketDB.init(dbDir);
+		}catch(Exception e) {
+			System.err.println("bad database directory: "+dbDir);
+			throw new RuntimeException("bad database directory: "+dbDir, e);
+		}
 	}
 
 	@Override
