@@ -1,8 +1,12 @@
 package net.neobp.ticketstack;
 
+import java.util.Enumeration;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+//@WebListener
 public class TicketstackInit implements ServletContextListener {
 
 	/* Called on startup of the servlet
@@ -10,7 +14,17 @@ public class TicketstackInit implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(final ServletContextEvent evt) {
-		String dbDir=evt.getServletContext().getInitParameter("net.neobp.ticketstack.database");
+		final ServletContext servletContext=evt.getServletContext();
+		System.err.println("TicketstackInit, servletContext="+servletContext);
+		System.err.println("TicketstackInit, servlet name="+servletContext.getServletContextName());
+		
+		Enumeration<String> params=servletContext.getInitParameterNames();
+		System.err.println("TicketstackInit, params:");
+		while(params.hasMoreElements())
+			System.err.println("init-param: "+params.nextElement());
+		System.err.println("TicketstackInit, end params.");
+
+		final String dbDir=evt.getServletContext().getInitParameter("net.neobp.ticketstack.database");
 		try {
 			TicketDB.init(dbDir);
 		}catch(Exception e) {

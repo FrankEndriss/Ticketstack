@@ -91,7 +91,7 @@ public class TicketDB {
 			props.store(out, "saved on "+new Date());
 			out.close();
 		}catch(Exception e) {
-			throw new RuntimeException("PersistenceException while saving", e) ;
+			throw new RuntimeException("PersistenceException while saving to: "+dbFile.getAbsolutePath(), e) ;
 		}
 	}
 
