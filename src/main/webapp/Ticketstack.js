@@ -187,7 +187,11 @@ function TSTable(domParent, model) {
 	 */
 	var render=function() {
 		log("render...");
-		$table=$('<table>', { id : tableID, border: 1 });
+		$table=$('<table>', { id : tableID });
+		$table.css('border', '1px solid');
+		$table.css('padding', '10px');
+		$table.css('border-radius', '10px');
+		$table.css('box-shadow', '10px 10px 5px #888888')
 
 		// create header row
 		var $hRow=$('<tr>');
@@ -427,7 +431,7 @@ function TicketstackBody(tableParent, inputParent) {
     	)
     );
 
-    $form=$('<form>').css('width', '400px');
+    $form=$('<form>').css('width', '620px');
     //$form=$('<form>').css('padding', '15px');
     $div=$('<div>').appendTo($form);
     
@@ -464,8 +468,6 @@ function TicketstackBody(tableParent, inputParent) {
     		$.ajax({
     			type: 'POST',
     			url: 'http://localhost:8080/Ticketstack/rest/TicketEntryResource',
-//    			contentType: 'application/xml',
- //   			data: ticketlist_json2xml({ ticket: newTicket, text: newText, prio: -1 }),
     			contentType: 'application/json',
     			data: JSON.stringify({ ticket: newTicket, text: newText, prio: -1 }),
     			dataType: 'json',
@@ -479,11 +481,10 @@ function TicketstackBody(tableParent, inputParent) {
     		});
     	}));
     
-    $div.children('label').css('float', 'left');
-    $div.children('input').css('float', 'right');
-    $div.children('textarea').css('float', 'right');
-    $div.children('#addButton').css('float', 'bottom');
-
+    $div.css('border', '1px solid');
+    $div.css('padding', '10px');
+    $div.css('border-radius', '10px');
+    $div.css('box-shadow', '10px 10px 5px #888888')
     inputParent.append($form);
 
     
@@ -499,11 +500,11 @@ function startTicketstackApp() {
 	var divIDs=[ "ts_appHeader", "ts_appTable", "ts_appInput", "ts_appFooter" ];
 	for(var i=0; i<divIDs.length; i++) {
 		$div=$('<div id="'+divIDs[i]+'"></div>');
-		$div.css('align-content', 'stretch');
 		$div.addClass('ts_topLevelDiv')
-		$("body:first").append($div).css('align-content', 'flex-start');
+		$div.css('align-content', 'stretch');
+		$div.css('padding', '10')
+		$("body:first").append($div);
 	}
-	$("body:first").css('align-content', 'flex-start');
 
     writeHeader();
     writeFooter();
