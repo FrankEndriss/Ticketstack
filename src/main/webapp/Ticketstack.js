@@ -124,6 +124,13 @@ function TSTableModel() {
 	
 }
 
+/** Baseclass for renderers of TSTable cells
+ * @param create function($td, model, row, col) called on creation of a cell
+ * @param update function($td, model, row, col) called on data updates of the model
+ * The default implementation sets on create the text of the $td to model.getValue(row, col). On update all children of $td are removed
+ * and create is called.
+ * So, your minimum implementation should implement create.
+ */
 function TSDefaultRenderer(create, update) {
 	this.create=create || function($td, model, row, col) {
 		$td.text(model.getValue(row, col));
@@ -159,22 +166,23 @@ function TSTable(domParent, model) {
 		$newTD=$('<td>');
 		$dRow.append($newTD);
 		if(colRenderers[col]) {
-			log("using colRenderers: "+colRenderers[col]);
+			log("using colRenderer: "+colRenderers[col]);
 			colRenderers[col].create($newTD, model, row, col);
 		} else { 
+			log("using default renderer: "+defaultRenderer);
 			defaultRenderer.create($newTD, model, row, col);
 		}
 	}
 
 	/** Set a renderer for a column.
-	 * Called as: renderer(rowSelector, model, row, col) where
-	 * rowSelector is a selector string to get the row
+	 * Called as: renderer($td, model, row, col) where
+	 * $td is the html element the data lives in.
 	 * model is the TSTableModel
 	 * row is the (integer) index into the model
-	 * col is the index of the column
+	 * col is the index of the column in the model
 	 * 
 	 * The default implementation does a 
-     * $(rowSelector).append( $('<td>', { text: model.getValue(row, col) }) );
+     * $td.text(model.getValue(row, col));
 	 * 
 	 * @public
 	 */
@@ -188,32 +196,29 @@ function TSTable(domParent, model) {
 	var render=function() {
 		log("render...");
 		$table=$('<table>', { id : tableID });
-		$table.css('border', '1px solid');
-		$table.css('padding', '10px');
-		$table.css('border-radius', '10px');
-		$table.css('box-shadow', '10px 10px 5px #888888')
+		$table.addClass('bordered');
 
 		// create header row
 		var $hRow=$('<tr>');
-		$table.append($hRow);
-
 		for(var i=0; i<model.colHea.length; i++) {
 			log("adding header: "+model.colHea[i]);
 			var $header=$('<th>', { text: model.colHea[i] });
 			$hRow.append($header);
 		}
+		$table.append($hRow);
 
 		// add data rows
 		for(var r=0; r<model.size(); r++) {
 			log("adding data row: idx="+r);
 			var $dRow=$('<tr>');
-			$table.append($dRow);
 			for(var c=0; c<model.cols.length; c++) {
 				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
 				createTD($dRow, r, model.cols[c]);
 			}
+			$table.append($dRow);
 		}
 
+		// replace the previously rendered table with the new one
 		var $oldTable=$('#'+tableID);
 		if($oldTable.size()==0) // first call
 			domParent.prepend($table);
@@ -224,12 +229,15 @@ function TSTable(domParent, model) {
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
 		// TODO optimize for less display, ie move/remove/add rows
-		/*
 		if(evt.type==='removed') {
+			$tr=$table.find('tr').eq(evt.idx1+1);
 			log("$table.remove on event, idx="+(evt.idx1+1));
-			$table.find('tr').eq(evt.idx1+1).remove();
+			$tr.fadeOut({
+				complete: function() {
+					$tr.remove();
+				}
+			});
 		} else
-		*/
 			render();
 	}
 
@@ -352,8 +360,10 @@ function TicketstackBody(tableParent, inputParent) {
 
     /** Called if del-button of ticket ticketId was clicked */
     var onDelClick=function(ticket) {
-    	log("onDelClick("+ticket.ticket)+");";
-    	model.remove(model.indexOf(ticket));
+    	log("onDelClick("+ticket.ticket+");");
+    	var idx=model.indexOf(ticket);
+    	log('index of '+ticket.ticket+' = '+idx);
+    	model.remove(idx),
     	$.ajax({
     		type: "POST",
     		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticket.ticket+"/delete",
@@ -381,6 +391,7 @@ function TicketstackBody(tableParent, inputParent) {
 					href: 'https://support.neo-business.info/browse/'+ticketId,
 					text: ticketId
     			}))
+    			$td.children('a').css('white-space', 'nowrap');
     		}
     	)
     );
@@ -431,7 +442,7 @@ function TicketstackBody(tableParent, inputParent) {
     	)
     );
 
-    $form=$('<form>').css('width', '620px');
+    $form=$('<form>').css('width', '60%');
     //$form=$('<form>').css('padding', '15px');
     $div=$('<div>').appendTo($form);
     
@@ -452,7 +463,8 @@ function TicketstackBody(tableParent, inputParent) {
     	id: 'ts_app_inp_text',
     	label: 'Text',
     	rows: 10,
-    	cols: 80
+    	width: '100%'
+    	//cols: 80
     }));
 
     $div.append($('<input>', {
@@ -481,10 +493,13 @@ function TicketstackBody(tableParent, inputParent) {
     		});
     	}));
     
+    $div.addClass('bordered');
+    /*
     $div.css('border', '1px solid');
     $div.css('padding', '10px');
     $div.css('border-radius', '10px');
     $div.css('box-shadow', '10px 10px 5px #888888')
+    */
     inputParent.append($form);
 
     

@@ -2,6 +2,17 @@
 
 <head>
 	<title>Ticketstack</title>
+	<style type="text/css">
+
+
+		.bordered {
+		    border: 1px solid;
+    		padding: 10px;
+    		border-radius: 10px;
+    		box-shadow: 10px 10px 5px #888888;
+		}
+
+	</style>
 
 	<script type="text/javascript" src="jquery-2.1.1.js"></script>
 	<script type="text/javascript" src="md5.js"></script>
