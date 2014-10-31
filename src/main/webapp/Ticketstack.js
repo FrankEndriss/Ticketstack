@@ -10,9 +10,12 @@ function log(logstring) {
 
 function TSTableEvent(type, data, idx1, idx2) {
 	this.type=type;
-	this.data=data;
-	this.idx1=idx1 || -1;
-	this.idx2=idx2 || -1;
+	if(typeof data != 'undefined')
+		this.data=data;
+	if(typeof idx1 != 'undefined')
+		this.idx1=idx1;
+	if(typeof idx2 != 'undefined')
+		this.idx2=idx2;
 }
 
 function TSTableModel() {
@@ -29,12 +32,12 @@ function TSTableModel() {
 	
 	this.setColumns=function(columns) {
 		this.cols=columns;
-		this.fireEvent(new TSTableEvent("metaChange", null));
+		this.fireEvent(new TSTableEvent("metaChange"));
 	}
 
 	this.setColHeaders=function(colHeaders) {
 		this.colHea=colHeaders;
-		this.fireEvent(new TSTableEvent("metaChange", null));
+		this.fireEvent(new TSTableEvent("metaChange"));
 	}
 
 	/** @public */
@@ -52,7 +55,7 @@ function TSTableModel() {
 	this.data=function(data) {
 		log("TSTableModel.data(): "+data);
 		ticketList=data;
-		this.fireEvent(new TSTableEvent("dataChange", null));
+		this.fireEvent(new TSTableEvent("dataChange"));
 	}
 
 	/** @public */
@@ -78,6 +81,7 @@ function TSTableModel() {
 	this.remove=function(idx) {
 		var ticket=ticketList[idx];
 		ticketList.splice(idx, 1);
+		log("firing event(removed, "+ticket+", "+idx+")");
 		this.fireEvent(new TSTableEvent("removed", ticket, idx));
 	}
 
@@ -228,10 +232,12 @@ function TSTable(domParent, model) {
 	
 	/** Called by TSTableModel  */
 	this.tsTableEvent=function(evt) {
+		log("tsTableEvent, evt.idx1="+evt.idx1);
 		// TODO optimize for less display, ie move/remove/add rows
 		if(evt.type==='removed') {
-			$tr=$table.find('tr').eq(evt.idx1+1);
-			log("$table.remove on event, idx="+(evt.idx1+1));
+			evt.idx1++;
+			$tr=$table.find('tr').eq(evt.idx1);
+			log("$table.remove on event, idx="+evt.idx1);
 			$tr.fadeOut({
 				complete: function() {
 					$tr.remove();
@@ -317,8 +323,12 @@ function TicketstackBody(tableParent, inputParent) {
 		$.ajax({
 			type: "GET",
 			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
+   			contentType: 'application/json',
+   			dataType: 'json',
 			success: function(data, status, jqXHR) {
-				model.data(ticketlist_xml2json(data));
+				log("server sent ticketlist: "+data);
+				model.data(data);
+//				model.data(ticketlist_xml2json(data));
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				alert("Reload failed: "+textStatus);

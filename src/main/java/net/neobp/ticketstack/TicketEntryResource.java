@@ -18,8 +18,7 @@ public class TicketEntryResource {
 
 	/**@return List of all TicketEntries */
 	@GET
-//	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<TicketEntry> getAllTicketEntries() {
 		System.out.println("getAllTicketEntries() called");
 		return TicketDB.getAllTicketEntries();
