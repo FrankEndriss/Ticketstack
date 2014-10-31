@@ -10,12 +10,9 @@ function log(logstring) {
 
 function TSTableEvent(type, data, idx1, idx2) {
 	this.type=type;
-	if(typeof data != 'undefined')
-		this.data=data;
-	if(typeof idx1 != 'undefined')
-		this.idx1=idx1;
-	if(typeof idx2 != 'undefined')
-		this.idx2=idx2;
+	this.data=data;
+	this.idx1=idx1;
+	this.idx2=idx2;
 }
 
 function TSTableModel() {
