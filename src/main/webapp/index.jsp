@@ -16,7 +16,7 @@
 
 	<script type="text/javascript" src="jquery-2.1.1.js"></script>
 	<script type="text/javascript" src="md5.js"></script>
-	<script type="text/javascript" src="Table.js"></script>
+	<script type="text/javascript" src="Table2.js"></script>
 	<script type="text/javascript" src="Ticketstack.js"></script>
 
 	<!-- Create page by calling startTicketstackApp -->
