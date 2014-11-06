@@ -25,10 +25,77 @@ function writeFooter() {
 }
 
 function TicketstackBody(tableParent, inputParent) {
-    var model=new TSTableModel();
-    model.setColHeaders([ "Up", "Down", "Ticket", "Text", "Delete" ]);
-    model.setColumns([ "buttonUp", "buttonDown", "ticket", "text", "buttonDel" ]);
+    var colConfigs=[
+                    {
+                    	accessor: 'buttonUp',
+                    	headertext: 'Up',
+                    	minWidth: 50,
+                    	renderer: new TSDefaultRenderer(
+                    				function($td, model, row, col) {
+                    					var ticketId=model.getValue(row, "ticket");
+                    					if(row>0) { // not on first row
+                    						$td.append($("<input>", {
+                    							type: 'button',
+                    							id:   'bUp'+row,
+                    							value: "Up"
+                    						})).click(function() { onUpClick(ticketId); });
+                    					}
+                    				}
+                    		)
+                    },
+                    {
+                    	accessor: 'buttonDown',
+                    	headertext: 'Down',
+                    	renderer: new TSDefaultRenderer(
+                    				function($td, model, row, col) {
+                    					var ticketId=model.getValue(row, "ticket");
+                    					if(row<model.size()-1) { // not on last row
+                    						$td.append($("<input>", {
+                    							type: 'button',
+                    							id:   'bDown'+row,
+                    							value: "Down"
+                    						})).click(function() { onDownClick(ticketId); });
+                    					}
+                    				}
+                    		)	
+                    },
+                    {
+                    	accessor: 'ticket',
+                    	headertext: 'Ticket',
+                    	renderer: new TSDefaultRenderer(
+                    				function($td, model, row, col) {
+                    					var ticketId=model.getValue(row, col);
+                    					$td.append($("<a>", {
+                    						href: 'https://support.neo-business.info/browse/'+ticketId,
+                    						text: ticketId
+                    					}))
+                    					$td.children('a').css('white-space', 'nowrap');
+                    				}
+                    		)
+                    },
+                    {
+                    	accessor: 'text',
+                    	headertext: 'Text'
+                    },
+                    {
+                    	accessor: 'buttonDel',
+                    	headertext: 'Delete',
+                    	renderer: new TSDefaultRenderer(
+                    				function($td, model, row, col) {
+                    					var ticket=model.getRow(row);
+                    					$td.append($("<input>", {
+                    						type: 'button',
+                    						//id:   'bDel'+row,
+                    						value: "Del"
+                    					})).click(function() { onDelClick(ticket); });
+                    				}
+                    		)
+                    }
+    ];
     
+    // data model of the table
+    var model=new TSTableModel();
+
     /** Loads the complete list from the backend and puts the
      * data into the model. Which causes a redisplay of the data-table.
      */
@@ -93,8 +160,8 @@ function TicketstackBody(tableParent, inputParent) {
     			log("onDelClick:success"+ticket.ticket);
     		},
 			error: function(jqXHR, textStatus, errorThrown) {
-				loadData();
 				alert("Ticket delete failed: "+textStatus);
+				loadData();
 			}
     	});
 	};
@@ -103,69 +170,12 @@ function TicketstackBody(tableParent, inputParent) {
 
     // create the table
     var table=new TSTable(tableParent, model);
+    // configure the columns
+    table.colConfig(colConfigs);
     
-    // set a column renderer to display a link, not only the text
-    table.setColRenderer("ticket", 
-    	new TSDefaultRenderer(
-    		function($td, model, row, col) {
-    			var ticketId=model.getValue(row, col);
-    			$td.append($("<a>", {
-					href: 'https://support.neo-business.info/browse/'+ticketId,
-					text: ticketId
-    			}))
-    			$td.children('a').css('white-space', 'nowrap');
-    		}
-    	)
-    );
     
-    // set a column renderer to display a button
-    table.setColRenderer("buttonUp",
-    	new TSDefaultRenderer(
-    		function($td, model, row, col) {
-    			var ticketId=model.getValue(row, "ticket");
-    			if(row>0) { // not on first row
-    				$td.append($("<input>", {
-    					type: 'button',
-    					id:   'bUp'+row,
-    					value: "Up"
-    				})).click(function() { onUpClick(ticketId); });
-    			}
-    		}
-    	)
-    );
-
-    // set a column renderer to display a button
-    table.setColRenderer("buttonDown", 
-    	new TSDefaultRenderer(
-    		function($td, model, row, col) {
-    			var ticketId=model.getValue(row, "ticket");
-    			if(row<model.size()-1) { // not on last row
-    				$td.append($("<input>", {
-    					type: 'button',
-    				  	id:   'bDown'+row,
-    				  	value: "Down"
-    				})).click(function() { onDownClick(ticketId); });
-    			}
-    		}
-    	)	
-    );
-
-    // set a column renderer to display a button
-    table.setColRenderer("buttonDel", 
-    	new TSDefaultRenderer(
-    		function($td, model, row, col) {
-    			var ticket=model.getRow(row);
-    			$td.append($("<input>", {
-    				type: 'button',
-    				//id:   'bDel'+row,
-    				value: "Del"
-    			})).click(function() { onDelClick(ticket); });
-    		}
-    	)
-    );
-
+    // create the input form for new tickets
     $form=$('<form>').css('width', '60%');
-    //$form=$('<form>').css('padding', '15px');
     $div=$('<div>').appendTo($form);
     
     $('<label>', {

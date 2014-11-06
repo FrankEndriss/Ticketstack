@@ -155,6 +155,45 @@ function TSTable(domParent, model) {
 		colOffsets[model.cols[c]]=100*c;
 	}
 
+	/** Column configurations */
+	var colConfigs=[];
+	var col2ConfigsMap=new Object();
+	
+	/** Called with configs per column.
+	 * Config fields:
+	 * accessor: 	field name in model objects
+	 * headertext:	String displayed in column header
+	 * renderer:	Function called as: renderer($td, model, row, col) where
+	 * 				$td is the html element the data lives in.
+	 * 				model is the TSTableModel
+	 * 				row is the (integer) index into the model
+	 * 				col is the index of the column in the model (the accessor)
+	 * 				The default implementation does a 
+     * 				$td.text(model.getValue(row, col));
+     * minWidth:	minimum witdh of column
+     * maxWidth:	maximum witdh of column, set to minWith for fixed with
+	 */
+	this.colConfig=function(configs) {
+		// TODO check configs to be correct objects
+		colConfigs=configs;
+		col2ConfigsMap=new Object();
+		for(var i=0; i<configs.length; i++) {
+			if(!configs[i].renderer)
+				configs[i].renderer=defaultRenderer;
+
+			if(!configs[i].offset)
+				configs[i].offset=0;
+			
+			if(!configs[i].minWidth)
+				configs[i].minWidth=10;
+
+			if(!configs[i].maxWidth)
+				configs[i].maxWidth=1000;
+
+			col2ConfigsMap[configs[i].accessor]=configs[i];
+		}
+	}
+
 	/**  @return a table instance specific classname based on the category.
 	 */
 	var getClassname=function(category) {
@@ -172,30 +211,17 @@ function TSTable(domParent, model) {
 		$newTD.addClass(getClassname('tsCol_'+col));
 		$newTD.css('left', colOffsets[col]);
 		$dRow.append($newTD);
-		if(colRenderers[col]) {
-			log("using colRenderer: "+colRenderers[col]);
-			colRenderers[col].create($newTD, model, row, col);
-		} else { 
-			log("using default renderer: "+defaultRenderer);
-			defaultRenderer.create($newTD, model, row, col);
-		}
+		log("using colRenderer: "+col2ConfigsMap[col].renderer);
+		col2ConfigsMap[col].renderer.create($newTD, model, row, col);
 	}
 
 	/** Set a renderer for a column.
-	 * Called as: renderer($td, model, row, col) where
-	 * $td is the html element the data lives in.
-	 * model is the TSTableModel
-	 * row is the (integer) index into the model
-	 * col is the index of the column in the model
-	 * 
-	 * The default implementation does a 
-     * $td.text(model.getValue(row, col));
 	 * 
 	 * @public
-	 */
 	this.setColRenderer=function(col, renderer) {
 		colRenderers[col]=renderer;
 	}
+	 */
 
 	/** Rerenders the complete table, and replaces a previously created one by the new one.
 	 * @private
@@ -212,13 +238,13 @@ function TSTable(domParent, model) {
 		$hRow.addClass(getClassname('tsRow'));
 		$hRow.addClass(getClassname('tsHeaderRow'));
 		$hRow.css('top', '0px');
-		for(var i=0; i<model.colHea.length; i++) {
-			log("adding header: "+model.colHea[i]);
-			var $header=$('<div>', { text: model.colHea[i] });
+		for(var i=0; i<colConfigs.length; i++) {
+			log("adding header: "+colConfigs[i].headertext);
+			var $header=$('<div>', { text: colConfigs[i].headertext });
 			$header.addClass(getClassname('tsCell'));
 			$header.addClass(getClassname('tsHeaderCell'));
-			$header.addClass(getClassname('tsCol_'+model.cols[i]));
-			$header.css('left', colOffsets[model.cols[i]]);
+			$header.addClass(getClassname('tsCol_'+colConfigs[i].accessor));
+			$header.css('left', ''+colConfigs[i].offset);
 			$hRow.append($header);
 		}
 		$table.append($hRow);
@@ -229,10 +255,10 @@ function TSTable(domParent, model) {
 			var $dRow=$('<div>');
 			$dRow.addClass(getClassname('tsRow'));
 			$dRow.addClass(getClassname('tsDataRow'));
-			$dRow.css('top', ''+((r+1)*25));
-			for(var c=0; c<model.cols.length; c++) {
-				log("adding data row/field: idx="+r+" field="+model.cols[c]+" value:"+model.getValue(r, model.cols[c]));
-				createTD($dRow, r, model.cols[c]);
+			$dRow.css('top', ''+((r+1)*25)); // 25==row heigth
+			for(var c=0; c<colConfigs.length; c++) {
+				log("adding data row/field: idx="+r+" field="+colConfigs[c].accessor+" value:"+model.getValue(r, colConfigs[c].accessor));
+				createTD($dRow, r, colConfigs[c].accessor);
 			}
 			$table.append($dRow);
 		}
@@ -244,23 +270,52 @@ function TSTable(domParent, model) {
 		else
 			$oldTable.replaceWith($table);
 
-		// recalculate colOffsets (column width and position)
-		for(var c=1; c<model.cols.length; c++) {
-			var maxW=0;
+		// recalculate colConfigs.offset (column width and position)
+		// for DOM reasons this has to happen after adding the $table to the DOM
+		for(var c=1; c<colConfigs.length; c++) {
+			var maxW=colConfigs[c-1].minWidth;
 			// find the max width of the cells of the previous column
-			$('.'+getClassname('tsCol_'+model.cols[c-1])).each(function(idx) {
+			$('.'+getClassname('tsCol_'+colConfigs[c-1].accessor)).each(function(idx) {
 				var w=$(this).width();
 				if(w>maxW)
 					maxW=w;
 			});
+			if(maxW>colConfigs[c-1].maxWidth)
+				maxW=colConfigs[c-1].maxWidth;
+			
 			// the offset of a column is the sum of all offsets left of it
-			colOffsets[model.cols[c]]=maxW+colOffsets[model.cols[c-1]];
+			colConfigs[c].offset=maxW+colConfigs[c-1].offset;
+			colConfigs[c-1].width=maxW;
+			log("offset of col:"+c+'='+colConfigs[c].offset);
 		}
 
+		var rowWidth=$('.'+getClassname('tsRow')).width();
+		log("rowWidth: "+rowWidth);
+
 		// set colOffsets (position of cell in row)
-		for(var c=0; c<model.cols.length; c++)
-			$('.'+getClassname('tsCol_'+model.cols[c])).css('left', ''+colOffsets[model.cols[c]]);
+		for(var c=0; c<colConfigs.length; c++) {
+			// all cells of that column
+			$cellSet=$('.'+getClassname('tsCol_'+colConfigs[c].accessor));
+
+			$cellSet.css('left', ''+colConfigs[c].offset);
+			$cellSet.css('right', ''+(rowWidth-(colConfigs[c].offset+colConfigs[c].width)));
+		}
 		
+		// calculate and set the row heights
+		var topOffset=0;
+		$('.'+getClassname('tsRow')).each(function(idx) {
+			$(this).css('top', ''+topOffset);
+			// find max height of cells in row
+			var maxH=0;
+			$(this).find('.'+getClassname('tsCell')).each(function(idx) {
+				log("cell in row, topOffset:"+topOffset);
+				var h=$(this).height();
+				if(maxH<h)
+					maxH=h;
+			});
+			$(this).height(maxH);
+			topOffset+=maxH;
+		});
 	}
 	
 	/** Called by TSTableModel  */
@@ -272,7 +327,7 @@ function TSTable(domParent, model) {
 			log("$table.remove on event, idx="+evt.idx1);
 			$tr.fadeOut({
 				complete: function() {
-					$tr.remove();
+					render();
 				}
 			});
 		} else
@@ -284,9 +339,9 @@ function TSTable(domParent, model) {
 	$('<style>.'+getClassname('tsTable')+
 			' { position: relative; overflow: hidden; box-sizing: border-box }</style>').appendTo('head');
 	$('<style>.'+getClassname('tsRow')+
-			' { position: absolute; width: 100%; height: 25px; box-sizing: border-box }</style>').appendTo('head');
+			' { position: absolute; width: 100%; box-sizing: border-box }</style>').appendTo('head');
 	$('<style>.'+getClassname('tsCell')+
-			' { position: absolute; width: "100px"; }</style>').appendTo('head');
+			' { position: absolute; }</style>').appendTo('head');
 
 	model.addListener(this);
 	render();
