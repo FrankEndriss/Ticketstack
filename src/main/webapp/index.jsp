@@ -7,9 +7,10 @@
 
 		.bordered {
 		    border: 1px solid;
-    		padding: 10px;
+		    padding: 10px;
     		border-radius: 10px;
     		box-shadow: 10px 10px 5px #888888;
+    		box-sizing: border-box;
 		}
 
 	</style>

@@ -145,16 +145,6 @@ function TSTable(domParent, model) {
 	var $table;
 	var defaultRenderer=new TSDefaultRenderer();
 	
-	/** Map of render objects capable of creating and updating the td-tags within the table */
-	var colRenderers=new Object();
-	
-	/** Map of column names to offsets (in pixel).
-	 * Initial 100px per column. */
-	var colOffsets=new Object();
-	for(var c=0; c<model.cols.length; c++) {
-		colOffsets[model.cols[c]]=100*c;
-	}
-
 	/** Column configurations */
 	var colConfigs=[];
 	var col2ConfigsMap=new Object();
@@ -204,24 +194,17 @@ function TSTable(domParent, model) {
 	 * Calls the column renderers to do so.
 	 */
 	var createTD=function($dRow, row, col) {
-		log("creating <div> for row, sel="+$dRow+" row="+row+" col="+col+" value="+model.getValue(row, col));
+		colConfig=col2ConfigsMap[col];
+		log("creating <div> for row, sel="+$dRow+" row="+row+" col="+colConfig.accessor+" value="+model.getValue(row, colConfig.accessor));
 		$newTD=$('<div>');
 		$newTD.addClass(getClassname('tsCell'));
 		$newTD.addClass(getClassname('tsDataCell'));
-		$newTD.addClass(getClassname('tsCol_'+col));
-		$newTD.css('left', colOffsets[col]);
+		$newTD.addClass(getClassname('tsCol_'+colConfig.accessor));
+		$newTD.css('left', colConfig.offset);
 		$dRow.append($newTD);
-		log("using colRenderer: "+col2ConfigsMap[col].renderer);
-		col2ConfigsMap[col].renderer.create($newTD, model, row, col);
+		log("using colRenderer: "+colConfig.renderer);
+		colConfig.renderer.create($newTD, model, row, colConfig.accessor);
 	}
-
-	/** Set a renderer for a column.
-	 * 
-	 * @public
-	this.setColRenderer=function(col, renderer) {
-		colRenderers[col]=renderer;
-	}
-	 */
 
 	/** Rerenders the complete table, and replaces a previously created one by the new one.
 	 * @private
@@ -231,7 +214,7 @@ function TSTable(domParent, model) {
 		$table=$('<div>', { id : tableID });
 		$table.addClass('bordered');
 		$table.addClass(getClassname('tsTable'));
-		$table.css('height', ''+(model.size()+1)*25);
+		//$table.css('height', ''+(model.size()+1)*25);
 
 		// create header row
 		var $hRow=$('<div>');
@@ -255,7 +238,7 @@ function TSTable(domParent, model) {
 			var $dRow=$('<div>');
 			$dRow.addClass(getClassname('tsRow'));
 			$dRow.addClass(getClassname('tsDataRow'));
-			$dRow.css('top', ''+((r+1)*25)); // 25==row heigth
+			//$dRow.css('top', ''+((r+1)*25)); // 25==row heigth
 			for(var c=0; c<colConfigs.length; c++) {
 				log("adding data row/field: idx="+r+" field="+colConfigs[c].accessor+" value:"+model.getValue(r, colConfigs[c].accessor));
 				createTD($dRow, r, colConfigs[c].accessor);
@@ -308,7 +291,6 @@ function TSTable(domParent, model) {
 			// find max height of cells in row
 			var maxH=0;
 			$(this).find('.'+getClassname('tsCell')).each(function(idx) {
-				log("cell in row, topOffset:"+topOffset);
 				var h=$(this).height();
 				if(maxH<h)
 					maxH=h;
@@ -316,6 +298,8 @@ function TSTable(domParent, model) {
 			$(this).height(maxH);
 			topOffset+=maxH;
 		});
+		// set the table height as the sum of the row heights
+		$($table).height(topOffset);
 	}
 	
 	/** Called by TSTableModel  */
@@ -335,9 +319,9 @@ function TSTable(domParent, model) {
 	}
 
 	// create the <style> for this table
-	
 	$('<style>.'+getClassname('tsTable')+
-			' { position: relative; overflow: hidden; box-sizing: border-box }</style>').appendTo('head');
+//			' { position: relative; overflow: hidden; box-sizing: border-box }</style>').appendTo('head');
+			' { position: relative; }</style>').appendTo('head');
 	$('<style>.'+getClassname('tsRow')+
 			' { position: absolute; width: 100%; box-sizing: border-box }</style>').appendTo('head');
 	$('<style>.'+getClassname('tsCell')+

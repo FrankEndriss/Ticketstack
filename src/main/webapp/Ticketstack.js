@@ -242,7 +242,7 @@ function startTicketstackApp() {
 	for(var i=0; i<divIDs.length; i++) {
 		$div=$('<div id="'+divIDs[i]+'"></div>');
 		$div.addClass('ts_topLevelDiv')
-		$div.css('align-content', 'stretch');
+//		$div.css('align-content', 'stretch');
 		$div.css('padding', '10')
 		$("body:first").append($div);
 	}
