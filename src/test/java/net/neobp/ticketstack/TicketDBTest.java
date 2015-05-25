@@ -12,6 +12,8 @@ import org.junit.Test;
 
 public class TicketDBTest {
 
+	private TicketDB ticketDB;
+	
 	private File tmpDir;
 
 	@Before
@@ -19,7 +21,8 @@ public class TicketDBTest {
 		tmpDir=File.createTempFile("ticketstack", "ts");
 		tmpDir.delete();
 		tmpDir.mkdir();
-		TicketDB.init(tmpDir.getAbsolutePath());
+		ticketDB=new TicketDB();
+		ticketDB.init(tmpDir.getAbsolutePath());
 		tmpDir.deleteOnExit();
 
 		insert3tickets();
@@ -42,8 +45,8 @@ public class TicketDBTest {
 	}
 
 	private void removeAllTickets() {
-		for(TicketEntry ent : TicketDB.getAllTicketEntries())
-			TicketDB.removeTicketEntry(ent.getTicket());
+		for(TicketEntry ent : ticketDB.getAllTicketEntries())
+			ticketDB.removeTicketEntry(ent.getTicket());
 		
 	}
 
@@ -52,29 +55,29 @@ public class TicketDBTest {
 		TicketEntry t1=new TicketEntry();
 		t1.setTicket("SENVION_W-73");
 		t1.setText("text zu senvion-w73");
-		TicketDB.insertTicket(t1);
+		ticketDB.insertTicket(t1);
 
 		TicketEntry t2=new TicketEntry();
 		t2.setTicket("SENVION_W-65");
 		t2.setText("text zu senvion-w65");
-		TicketDB.insertTicket(t2);
+		ticketDB.insertTicket(t2);
 
 		TicketEntry t3=new TicketEntry();
 		t3.setTicket("SENVION_N-25");
 		t3.setText("text zu senvion-n25.... langer text");
-		TicketDB.insertTicket(t3);
+		ticketDB.insertTicket(t3);
 	}
 
 	@Test
 	public void testGetTicketEntry() {
-		final TicketEntry ticket=TicketDB.getTicketEntry("SENVION_W-65");
+		final TicketEntry ticket=ticketDB.getTicketEntry("SENVION_W-65");
 		assertNotNull("ticket not found", ticket);
 		assertEquals("ticket id", "SENVION_W-65", ticket.getTicket());
 	}
 
 	@Test
 	public void testGetAllTicketEntries() {
-		final List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
+		final List<TicketEntry> tickets=ticketDB.getAllTicketEntries();
 		assertEquals("must be 3 tickets", 3, tickets.size());
 		
 		// TODO test if sorted by prio
@@ -82,30 +85,30 @@ public class TicketDBTest {
 
 	@Test
 	public void testRemoveTicketEntry() {
-		TicketDB.removeTicketEntry("SENVION_W-65");
-		final List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
+		ticketDB.removeTicketEntry("SENVION_W-65");
+		final List<TicketEntry> tickets=ticketDB.getAllTicketEntries();
 		assertEquals("must be 2 tickets left", 2, tickets.size());
 	}
 
 	@Test
 	public void testUpdateTicketEntry() {
-		TicketEntry ticket=TicketDB.getTicketEntry("SENVION_W-65");
+		TicketEntry ticket=ticketDB.getTicketEntry("SENVION_W-65");
 		final String testtext="changed text";
 		ticket.setText(testtext);
-		TicketDB.updateTicketEntry(ticket);
+		ticketDB.updateTicketEntry(ticket);
 
 		// query again
-		ticket=TicketDB.getTicketEntry("SENVION_W-65");
+		ticket=ticketDB.getTicketEntry("SENVION_W-65");
 		assertEquals("tickettext", testtext, ticket.getText());
 
 		// check list size
-		final List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
+		final List<TicketEntry> tickets=ticketDB.getAllTicketEntries();
 		assertEquals("must still be 3 tickets", 3, tickets.size());
 	}
 
 	@Test
 	public void testMoveTicketUp() {
-		List<TicketEntry> tickets=TicketDB.getAllTicketEntries();
+		List<TicketEntry> tickets=ticketDB.getAllTicketEntries();
 		// should be sorted by prio
 		// search index of testticket
 		int oldIdx=-1;
@@ -116,9 +119,9 @@ public class TicketDBTest {
 			}
 		}
 
-		TicketDB.moveTicketUp("SENVION_W-65");
+		ticketDB.moveTicketUp("SENVION_W-65");
 
-		tickets=TicketDB.getAllTicketEntries();
+		tickets=ticketDB.getAllTicketEntries();
 		// should be sorted by prio
 		// search index of testticket
 		int newIdx=-1;

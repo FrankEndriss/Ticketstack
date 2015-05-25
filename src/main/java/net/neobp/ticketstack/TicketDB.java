@@ -26,16 +26,16 @@ public class TicketDB implements TicketDBIf {
 	/** TODO use a List sorted by prio.
 	 * This is a map TicketEntry.getTicket() -> TicketEntry
 	 **/
-	private final static Map<String, TicketEntry> tickets=new HashMap<String, TicketEntry>();
+	private final Map<String, TicketEntry> tickets=new HashMap<String, TicketEntry>();
 	
 	/** Database directory, injected in init() */
-	private static File dbDir;
-	private static File dbFile;
-	private static File timeentFile;
+	private File dbDir;
+	private File dbFile;
+	private File timeentFile;
 	
 	/** Loads data from persistence to member tickets
 	 */
-	private static void load() {
+	private void load() {
 		InputStream in=null;
 		try {
 			in=new FileInputStream(dbFile);
@@ -73,7 +73,7 @@ public class TicketDB implements TicketDBIf {
 	
 	/** Saves member tickets to persistence
 	 */
-	private static void save() {
+	private void save() {
 		// fairly simple format using Properties
 		// for every ticket there is an entry "_ticket_<some_number>=<ticketId>"
 		// and for every entry of _ticket_<number> there are two more entries
@@ -239,7 +239,7 @@ public class TicketDB implements TicketDBIf {
 	 * directory can be created. Obviously the directory must be readable and writable.
 	 * @throws IOException 
 	 */
-	public static void init(final String pdbDir) throws IOException {
+	public void init(final String pdbDir) throws IOException {
 		dbDir=new File(pdbDir);
 		if(!dbDir.exists()) {
 			dbDir.mkdirs();
