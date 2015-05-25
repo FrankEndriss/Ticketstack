@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/Ticketstack" >
+
+	<Resource name="jdbc/TicketstackDB"
+	    auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="org.hsqldb.jdbc.JDBCDriver"
+ 		url="jdbc:hsqldb:file:./.Ticketstack.db/hsql.db"
+ 		username="SA"
+ 		password=""
+ 		maxActive="20"
+ 		maxIdle="10"
+		maxWait="-1"
+	/>
+
+</Context>

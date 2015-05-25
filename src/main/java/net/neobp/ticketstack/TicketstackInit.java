@@ -2,9 +2,12 @@ package net.neobp.ticketstack;
 
 import java.util.Enumeration;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.sql.DataSource;
 
 //@WebListener
 public class TicketstackInit implements ServletContextListener {
@@ -31,6 +34,22 @@ public class TicketstackInit implements ServletContextListener {
 			System.err.println("bad database directory: "+dbDir);
 			throw new RuntimeException("bad database directory: "+dbDir, e);
 		}
+		
+		
+		// Init hsqldb database
+		try {
+			InitialContext cxt = new InitialContext();
+
+			DataSource ds=(DataSource) cxt.lookup( "java:/comp/env/jdbc/TicketstackDB" );
+			if ( ds == null )
+				throw new RuntimeException("Uh oh -- Data source not found while initialization of Ticketstack application!");
+
+			servletContext.setAttribute("net.neobp.ticketstack.TicketstackDB", new JdbcTicketDB(ds));
+
+		} catch (NamingException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	@Override

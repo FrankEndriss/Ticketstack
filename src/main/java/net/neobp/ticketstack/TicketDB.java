@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,7 +21,7 @@ import java.util.Properties;
 
 /** Simple database for TicketEntry objects.
  */
-public class TicketDB {
+public class TicketDB implements TicketDBIf {
 	
 	/** TODO use a List sorted by prio.
 	 * This is a map TicketEntry.getTicket() -> TicketEntry
@@ -28,6 +31,7 @@ public class TicketDB {
 	/** Database directory, injected in init() */
 	private static File dbDir;
 	private static File dbFile;
+	private static File timeentFile;
 	
 	/** Loads data from persistence to member tickets
 	 */
@@ -95,11 +99,11 @@ public class TicketDB {
 		}
 	}
 
-	public static TicketEntry getTicketEntry(final String id) {
+	public TicketEntry getTicketEntry(final String id) {
 		return tickets.get(id);
 	}
 	
-	public static List<TicketEntry> getAllTicketEntries() {
+	public List<TicketEntry> getAllTicketEntries() {
 		List<TicketEntry> retList=new ArrayList<TicketEntry>(tickets.values());
 		Collections.sort(retList, prioComparator);
 		return retList;
@@ -109,7 +113,7 @@ public class TicketDB {
 	 * @param ticket
 	 * @return true if found and removed, false if notfound
 	 */
-	public static synchronized void removeTicketEntry(final String id) {
+	public synchronized void removeTicketEntry(final String id) {
 		if(tickets.remove(id)==null)
 			throw new IllegalArgumentException("notfound: "+id);
 		save();
@@ -119,7 +123,7 @@ public class TicketDB {
 	 * Prios of all other Tickets are adjusted
 	 * @param ticketEntry
 	 */
-	public synchronized static void insertTicket(final TicketEntry ticketEntry) {
+	public synchronized void insertTicket(final TicketEntry ticketEntry) {
 		if(tickets.get(ticketEntry.getTicket())!=null)
 			throw new IllegalArgumentException("ticket exists");
 			
@@ -142,7 +146,7 @@ public class TicketDB {
 	/** Update/Insert of ticket. ticket.getTicket() must not be null, primaryKey.
 	 * @param ticket the updated ticket
 	 */
-	public static synchronized void updateTicketEntry(final TicketEntry ticket) {
+	public synchronized void updateTicketEntry(final TicketEntry ticket) {
 		final TicketEntry lTicket=tickets.get(ticket.getTicket());
 		if(lTicket==null)
 			throw new RuntimeException("Notfound ticket: "+ticket.getTicket());
@@ -153,7 +157,6 @@ public class TicketDB {
 	
 
 	private final static Comparator<TicketEntry> prioComparator=new Comparator<TicketEntry>() {
-			@Override
 			public int compare(TicketEntry o1, TicketEntry o2) {
 				return o1.getPrio()-o2.getPrio();
 			}
@@ -163,7 +166,7 @@ public class TicketDB {
 	 * Synchronized since two tickets are updated atomically
 	 * @param id of the ticket to move down
 	 */
-	public static synchronized void moveTicketDown(final String id) {
+	public synchronized void moveTicketDown(final String id) {
 		final TicketEntry ticketEntry=getTicketEntry(id);
 		if(ticketEntry==null)
 			throw new IllegalArgumentException("notfound: "+id);
@@ -185,7 +188,7 @@ public class TicketDB {
 	 * Synchronized since two tickets are updated atomically
 	 * @param id of the ticket to move up
 	 */
-	public static synchronized void moveTicketUp(final String id) {
+	public synchronized void moveTicketUp(final String id) {
 		final TicketEntry ticketEntry=getTicketEntry(id);
 		if(ticketEntry==null)
 			throw new IllegalArgumentException("notfound: "+id);
