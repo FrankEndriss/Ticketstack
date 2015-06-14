@@ -7,12 +7,11 @@
 	
 	<!--
 	<servlet>
-		<servlet-name>Ticketstack Application</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-name>TicketstackApp</servlet-name>
 
- 		<init-param>
- 			<param-name>com.sun.jersey.config.property.packages</param-name>
- 			<param-value>net.neobp.ticketstack</param-value>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>net.neobp.ticketstack.TicketstackAppConfig</param-value>
 		</init-param>
 
 		<init-param>
@@ -27,18 +26,21 @@
 		
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+		-->
+
+	<!--
 	<servlet-mapping>
 		<servlet-name>Ticketstack Application</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
   -->
-		<!-- Ticketstack database directory -->
+		<!-- Ticketstack database directory
 		<context-param>
 	    	<description>Database directory for Ticketstack application</description>
 			<param-name>net.neobp.ticketstack.database</param-name>
 			<param-value>./.Ticketstack.db</param-value>
 		</context-param>
-      
+       -->
 	
 	<!-- Listener to init Ticketstack database on startup
 	<listener>

@@ -2,6 +2,9 @@ package net.neobp.ticketstack;
 
 import java.util.List;
 
+import javax.ejb.Local;
+
+@Local
 public interface TicketDBIf {
 	public TicketEntry getTicketEntry(final String id);
 	public List<TicketEntry> getAllTicketEntries(); 

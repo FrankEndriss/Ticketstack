@@ -2,10 +2,10 @@ package net.neobp.ticketstack;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,17 +23,17 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 public class TicketEntryResource {
 
-	//@Resource(name="jdbc/TicketstackDB")
-	//private DataSource ticketDB_dataSource;
+	@Resource(name="myDataSource", lookup="java:comp/DefaultDataSource")
+	private DataSource ticketDB_dataSource;
 	
-	@EJB
-	public JdbcTicketDB jdbcTicketDB;
+	@EJB(name="JdbcTicketDB")
+	private JdbcTicketDB jdbcTicketDB;
 	
 	/**@return List of all TicketEntries */
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<TicketEntry> getAllTicketEntries() {
-		System.out.println("getAllTicketEntries() called");
+		System.out.println("getAllTicketEntries() called, jdbcTicketDB="+jdbcTicketDB + "\nticketDB_DataSource="+ticketDB_dataSource);
 		return jdbcTicketDB.getAllTicketEntries();
 	}
 	
