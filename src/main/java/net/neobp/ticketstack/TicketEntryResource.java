@@ -23,9 +23,6 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 public class TicketEntryResource {
 
-	@Resource(name="myDataSource", lookup="java:comp/DefaultDataSource")
-	private DataSource ticketDB_dataSource;
-	
 	@EJB(name="JdbcTicketDB")
 	private JdbcTicketDB jdbcTicketDB;
 	
@@ -33,7 +30,7 @@ public class TicketEntryResource {
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<TicketEntry> getAllTicketEntries() {
-		System.out.println("getAllTicketEntries() called, jdbcTicketDB="+jdbcTicketDB + "\nticketDB_DataSource="+ticketDB_dataSource);
+		System.err.println("getAllTicketEntries() called, jdbcTicketDB="+jdbcTicketDB);
 		return jdbcTicketDB.getAllTicketEntries();
 	}
 	

@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 // use default Transaction: @TransactionAttribute(value=TransactionAttributeType.REQUIRED)
 public class JdbcTicketDB implements TicketDBIf {
 	
-	@Resource(name="jdbc/DefaultDataSource")
+	@Resource(name="TicketstackDB")
 	private DataSource dataSource;
 	
 	public int getVersion() {
@@ -66,7 +66,7 @@ public class JdbcTicketDB implements TicketDBIf {
 			try(Statement stat=con.createStatement()) {
 				stat.executeQuery("UPDATE neodbinfo SET confValue='1' WHERE confKey='version' ;");
 				stat.executeQuery("CREATE TABLE tickets(id char(256) primary key, text varchar(2048), prio integer);");
-				stat.executeQuery("CREATE TABLE ticket_time(id char(256), from char(32) not null, to char(32));");
+				stat.executeQuery("CREATE TABLE ticket_time(id char(256), ttfrom char(32) not null, ttto char(32));");
 			}
 		}
 	}
