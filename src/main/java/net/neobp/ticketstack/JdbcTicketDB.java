@@ -35,7 +35,7 @@ public class JdbcTicketDB implements TicketDBIf {
 		System.err.println("in JdbcTicketDB.init(), dataSource="+dataSource);
 		final Map<String, String> dbConfig=new HashMap<String, String>();
 		try(Connection con=dataSource.getConnection(); Statement stat=con.createStatement()) {
-			final ResultSet rs=stat.executeQuery("select * from neodbinfo");
+			final ResultSet rs=stat.executeQuery("select confKey, confValue from neodbinfo");
 			while(rs.next()) {
 				final String s1=rs.getString(1);
 				final String s2=rs.getString(2);

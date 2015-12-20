@@ -57,8 +57,8 @@ function TSTableModel() {
 	/** Reset the complete data list.
 	 * @public */
 	this.data=function(data) {
-		log("TSTableModel.data(): "+data);
-		ticketList=data;
+		log("TSTableModel.data(): "+data+" "+data.ticketEntry);
+		ticketList=data.ticketEntry;
 		this.fireEvent(new TSTableEvent("dataChange"));
 	}
 

@@ -1,5 +1,6 @@
 package net.neobp.ticketstack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -23,22 +24,38 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 public class TicketEntryResource {
 
-	@Resource(name="myDataSource", lookup="java:comp/DefaultDataSource")
-	private DataSource ticketDB_dataSource;
-	
 	@EJB(name="JdbcTicketDB")
 	private JdbcTicketDB jdbcTicketDB;
 	
 	/**@return List of all TicketEntries */
 	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
+//	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<TicketEntry> getAllTicketEntries() {
-		System.out.println("getAllTicketEntries() called, jdbcTicketDB="+jdbcTicketDB + "\nticketDB_DataSource="+ticketDB_dataSource);
-		return jdbcTicketDB.getAllTicketEntries();
+		System.out.println("getAllTicketEntries() called, jdbcTicketDB="+jdbcTicketDB);
+		List<TicketEntry> list=jdbcTicketDB.getAllTicketEntries();
+		// debug
+		if(list.isEmpty()) {
+			list=new ArrayList<TicketEntry>();
+			TicketEntry fakeEntry=new TicketEntry();
+			fakeEntry.setPrio(1);
+			fakeEntry.setText("fake entry text");
+			fakeEntry.setTicket("myTicketID1");
+			list.add(fakeEntry);
+
+			TicketEntry fakeEntry2=new TicketEntry();
+			fakeEntry2.setPrio(2);
+			fakeEntry2.setText("fake entry2 text");
+			fakeEntry2.setTicket("myTicketID2");
+			list.add(fakeEntry2);
+		}
+		// end debug
+		return list;
 	}
 	
 	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
+//	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public void insertTicket(final TicketEntry ticketEntry) {
 		System.out.println("insertTicket called, "+ticketEntry.getTicket());
 		jdbcTicketDB.insertTicket(ticketEntry);
