@@ -4,47 +4,26 @@
 
 <web-app>
 	<display-name>Ticketstack Application</display-name>
+
+    <init-param>
+	    <param-name>contextConfigLocation</param-name>
+    	<param-value>classpath:/spring-beans.xml</param-value>
+    </init-param>
+
 	<servlet>
-	    <!-- Use Jersey JAX-RS implementation -->
-		<servlet-name>Ticketstack Application</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-
-		<!-- Ticketstack application classes Jersey uses -->
- 		<init-param>
- 			<param-name>com.sun.jersey.config.property.packages</param-name>
- 			<param-value>net.neobp.ticketstack</param-value>
-		</init-param>
-
- 		<!-- Jersey json support -->
-		<init-param>
-			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-			<param-value>true</param-value>
-		</init-param>
-
-		<!--  Jersey debug mode -->
-		<init-param>
-			<param-name>com.sun.jersey.config.feature.Trace</param-name>
-			<param-value>true</param-value>
-		</init-param>
+	    <servlet-name>ticketstack</servlet-name>
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+		    <param-name>contextConfigLocation</param-name>
+	    	<param-value>/WEB-INF/spring-beans.xml</param-value>
+	    </init-param>
 		
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>Ticketstack Application</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
-	</servlet-mapping>
 
-		<!-- Ticketstack database directory -->
-		<context-param>
-	    	<description>Database directory for Ticketstack application</description>
-			<param-name>net.neobp.ticketstack.database</param-name>
-			<param-value>./.Ticketstack.db</param-value>
-		</context-param>
-      
-	
-	<!-- Listener to init Ticketstack database on startup -->
-	<listener>
-	    <listener-class>net.neobp.ticketstack.TicketstackInit</listener-class>
-	</listener>
+	<servlet-mapping>
+		<servlet-name>ticketstack</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
 
 </web-app>

@@ -153,7 +153,6 @@ public class TicketDB {
 	
 
 	private final static Comparator<TicketEntry> prioComparator=new Comparator<TicketEntry>() {
-			@Override
 			public int compare(TicketEntry o1, TicketEntry o2) {
 				return o1.getPrio()-o2.getPrio();
 			}

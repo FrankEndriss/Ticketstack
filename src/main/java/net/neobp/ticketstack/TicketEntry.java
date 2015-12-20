@@ -9,6 +9,7 @@ public class TicketEntry {
 		// jaxb needs this
 	}
 
+	private long id;
 	private String ticket;
 	private String text;
 	private int prio;
@@ -35,6 +36,14 @@ public class TicketEntry {
 
 	public void setPrio(final int prio) {
 		this.prio = prio;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }
