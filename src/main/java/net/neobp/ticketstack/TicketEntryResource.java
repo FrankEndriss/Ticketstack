@@ -2,6 +2,9 @@ package net.neobp.ticketstack;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,27 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** The REST adapter to the TicketDB
  */
-//@Path("/TicketEntryResource")
 @RestController
+//@RequestMapping(value = "/api")
 public class TicketEntryResource {
 
 	private TicketEntryDao teDao;
 
+	@Autowired
 	public TicketEntryResource(final TicketEntryDao teDao) {
 		this.teDao=teDao;
-		throw new RuntimeException("hello world");
 	}
 	
 	/**@return List of all TicketEntries */
-//	@GET
 //	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public List<TicketEntry> getAllTicketEntries() {
+	@RequestMapping(value="/api", method=RequestMethod.GET)
+	public ResponseEntity<List<TicketEntry>> getAllTicketEntries() {
 		System.out.println("getAllTicketEntries() called");
-		return teDao.getAllTicketEntries();
+		return new ResponseEntity<List<TicketEntry>>(teDao.getAllTicketEntries(), HttpStatus.OK);
 	}
 	
-//	@POST
 //	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@RequestMapping(value="/", method=RequestMethod.POST)
 	public void insertTicket(final TicketEntry ticketEntry) {

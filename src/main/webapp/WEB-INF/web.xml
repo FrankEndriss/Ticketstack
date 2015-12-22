@@ -5,25 +5,28 @@
 <web-app>
 	<display-name>Ticketstack Application</display-name>
 
-    <init-param>
-	    <param-name>contextConfigLocation</param-name>
-    	<param-value>classpath:/spring-beans.xml</param-value>
-    </init-param>
-
 	<servlet>
-	    <servlet-name>ticketstack</servlet-name>
-	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	    <init-param>
-		    <param-name>contextConfigLocation</param-name>
-	    	<param-value>/WEB-INF/spring-beans.xml</param-value>
-	    </init-param>
-		
+		<servlet-name>ticketstack</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/ticketstack-beans.xml</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>ticketstack</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>/Ticketstack</url-pattern>
 	</servlet-mapping>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

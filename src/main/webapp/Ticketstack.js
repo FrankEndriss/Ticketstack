@@ -96,13 +96,15 @@ function TicketstackBody(tableParent, inputParent) {
     // data model of the table
     var model=new TSTableModel();
 
+	var baseRestUrl= "http://localhost:8080/Ticketstack/api/";
+
     /** Loads the complete list from the backend and puts the
      * data into the model. Which causes a redisplay of the data-table.
      */
     var loadData=function() {
 		$.ajax({
 			type: "GET",
-			url: "http://localhost:8080/Ticketstack/rest/TicketEntryResource",
+			url: baseRestUrl,
    			contentType: 'application/json',
    			dataType: 'json',
 			success: function(data, status, jqXHR) {
@@ -120,7 +122,7 @@ function TicketstackBody(tableParent, inputParent) {
     	log("onUpClick("+ticketId+")");
     	$.ajax({
     		type: "POST",
-    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/down",
+    		url:  baseRestUrl+ticketId+"/down",
     		success: function(data, status, jqXHR) {
     			// TODO optimize to swap row prios in model instead of reload data
     			loadData();
@@ -136,7 +138,7 @@ function TicketstackBody(tableParent, inputParent) {
     	log("onUpClick("+ticketId+")");
     	$.ajax({
     		type: "POST",
-    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticketId+"/up",
+    		url:  baseRestUrl+ticketId+"/up",
     		success: function(data, status, jqXHR) {
     			// TODO optimize to swap row prios instead of reload data
     			loadData();
@@ -155,7 +157,7 @@ function TicketstackBody(tableParent, inputParent) {
     	model.remove(idx),
     	$.ajax({
     		type: "POST",
-    		url:  "http://localhost:8080/Ticketstack/rest/TicketEntryResource/"+ticket.ticket+"/delete",
+    		url:  baseRestUrl+ticket.ticket+"/delete",
     		success: function(data, status, jqXHR) {
     			log("onDelClick:success"+ticket.ticket);
     		},
@@ -211,7 +213,7 @@ function TicketstackBody(tableParent, inputParent) {
     		// onAddClicked()
     		$.ajax({
     			type: 'POST',
-    			url: 'http://localhost:8080/Ticketstack/rest/TicketEntryResource',
+    			url: baseRestUrl,
     			contentType: 'application/json',
     			data: JSON.stringify({ ticket: newTicket, text: newText, prio: -1 }),
     			dataType: 'json',

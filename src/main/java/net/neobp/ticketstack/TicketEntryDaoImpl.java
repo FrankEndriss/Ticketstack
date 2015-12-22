@@ -27,6 +27,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 				teRowMapper);
 	}
 
+	@Transactional
 	public void insertTicket(TicketEntry ticketEntry) {
 		jdbcTemplate.update(
 				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
