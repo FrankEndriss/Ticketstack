@@ -25,11 +25,11 @@
 		-->
 	</bean>
 
+	<!--
 	<bean id="ticketEntryDao" class="net.neobp.ticketstack.TicketEntryDaoImpl">
 		<constructor-arg ref="dataSource"/>
 	</bean>
     
-	<!--
 	<bean id="ticketstackServlet" class="net.neobp.ticketstack.TicketEntryResource">
 		<constructor-arg ref="ticketEntryDao"/>
 	</bean>

@@ -8,6 +8,7 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd" >
 	
+    <!--
 	<mvc:anotation-driven />
 
 	<context:component-scan base-package="net.neobp.ticketstack" />
@@ -16,6 +17,6 @@
 		mapping="static/**"
 		location="/static/"
 	/>
-
+  -->
 </beans>
 

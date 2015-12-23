@@ -18,6 +18,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>4.2.4.RELEASE</version>
@@ -35,6 +41,14 @@
 			<version>4.2.4.RELEASE</version>
 		</dependency>
 	
+		<!--  we want to use JSR-330 @Inject instead of @Autowired -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<!--  we use postgreSQL database -->
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>

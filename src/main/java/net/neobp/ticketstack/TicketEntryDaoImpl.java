@@ -4,21 +4,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 public class TicketEntryDaoImpl implements TicketEntryDao {
+    private final static Logger log = Logger.getLogger(TicketEntryDaoImpl.class);
+    
 	private final DataSource dataSource;
 
 	private final JdbcTemplate jdbcTemplate;
 	private final TicketEntryRowMapper teRowMapper=new TicketEntryRowMapper();
 	
+	@Inject
 	public TicketEntryDaoImpl(final DataSource dataSource) {
 		this.dataSource=dataSource;
 		this.jdbcTemplate=new JdbcTemplate(this.dataSource);
+		log.info("TicketEntryDaoImpl created");
 	}
 	
 	public List<TicketEntry> getAllTicketEntries() {
