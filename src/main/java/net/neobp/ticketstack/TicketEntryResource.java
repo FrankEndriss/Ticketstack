@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** The REST adapter to the TicketDB
  */
-@Controller
-//@RestController
-@RequestMapping(value = "/api")
+//@Controller
+@RestController
+//@RequestMapping(value = "/api")
 public class TicketEntryResource {
     private final Logger log = Logger.getLogger(TicketEntryResource.class);
 
@@ -31,7 +31,7 @@ public class TicketEntryResource {
 	
 	/** @return List of all TicketEntries */
 //	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@RequestMapping(value="/list.*", method=RequestMethod.GET)
+	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ResponseEntity<List<TicketEntry>> getAllTicketEntries() {
 		log.info("getAllTicketEntries() called");
 		return new ResponseEntity<List<TicketEntry>>(teDao.getAllTicketEntries(), HttpStatus.OK);
