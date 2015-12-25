@@ -7,21 +7,20 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/** The REST adapter to the TicketDB
+/** The REST adapter to the TicketEntry database
  */
-//@Controller
 @RestController
-//@RequestMapping(value = "/api")
+@RequestMapping(value = "/api")
 public class TicketEntryResource {
     private final Logger log = Logger.getLogger(TicketEntryResource.class);
 
-	private TicketEntryDao teDao;
+	private final TicketEntryDao teDao;
 
 	@Inject
 	public TicketEntryResource(final TicketEntryDao teDao) {
@@ -30,18 +29,31 @@ public class TicketEntryResource {
 	}
 	
 	/** @return List of all TicketEntries */
-//	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public ResponseEntity<List<TicketEntry>> getAllTicketEntries() {
+	public List<TicketEntry> getAllTicketEntries() {
 		log.info("getAllTicketEntries() called");
-		return new ResponseEntity<List<TicketEntry>>(teDao.getAllTicketEntries(), HttpStatus.OK);
+		final List<TicketEntry> ticketEntries=teDao.getAllTicketEntries();
+		if(log.isInfoEnabled()) {
+			for(TicketEntry te : ticketEntries)
+				log.info("ticketEntry: "+te.getTicket()+" "+te.getPrio()+" "+te.getText());
+			log.info("end of List<TicketEntry>");
+		}
+		return ticketEntries;
 	}
 	
-//	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public void insertTicket(final TicketEntry ticketEntry) {
-		log.info("insertTicket() called, "+ticketEntry.getTicket());
-		teDao.insertTicket(ticketEntry);
+	public ResponseEntity<TicketEntry> insertTicket(@RequestBody TicketEntry ticketEntry) {
+		log.info("insertTicket() called, ticketEntry="+ticketEntry);
+		if(ticketEntry!=null) {
+			log.info("insertTicket() called, ticketEntry.ticket="+ticketEntry.getTicket());
+			log.info("insertTicket() called, ticketEntry.text="+ticketEntry.getText());
+		}
+		try {
+			teDao.insertTicket(ticketEntry);
+			return new ResponseEntity<TicketEntry>(teDao.getTicketEntry(ticketEntry.getTicket()), HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<TicketEntry>(HttpStatus.CONFLICT);
+		}
 	}
 	
 	/** @param id of TicketEntry
@@ -50,17 +62,27 @@ public class TicketEntryResource {
 //	@GET
 //	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public TicketEntry getTicketEntry( @PathVariable("id") final String id) {
+	public ResponseEntity<TicketEntry> getTicketEntry( @PathVariable("id") final String id) {
 		log.info("getTicketEntry() called: "+id);
-		return teDao.getTicketEntry(id);
+		TicketEntry ret=teDao.getTicketEntry(id);
+		if(ret!=null)
+			return new ResponseEntity<TicketEntry>(ret, HttpStatus.OK);
+		else 
+			return new ResponseEntity<TicketEntry>(HttpStatus.NOT_FOUND);
 	}
 
 //	@POST
 //	@Path("{id}/up")
 	@RequestMapping(value="/{id}/up", method=RequestMethod.POST)
-	public void moveTicketUp( @PathVariable("id") final String id) {
+	public ResponseEntity<Void> moveTicketUp( @PathVariable("id") final String id) {
 		log.info("moveTicketUp() called: "+id);
-		teDao.moveTicketUp(id);
+		if(teDao.moveTicketUp(id)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else if(teDao.getTicketEntry(id)==null)
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+			
 	}
 	
 //	@POST

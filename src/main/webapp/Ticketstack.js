@@ -25,6 +25,7 @@ function writeFooter() {
 }
 
 function TicketstackBody(tableParent, inputParent) {
+	// columns of the table listing the tickets
     var colConfigs=[
                     {
                     	accessor: 'buttonUp',
@@ -96,7 +97,8 @@ function TicketstackBody(tableParent, inputParent) {
     // data model of the table
     var model=new TSTableModel();
 
-	var baseRestUrl= "http://localhost:8080/Ticketstack/api/";
+    // rest api url, should be externalized
+	var baseRestUrl= "http://localhost:8080/api/";
 
     /** Loads the complete list from the backend and puts the
      * data into the model. Which causes a redisplay of the data-table.
@@ -119,7 +121,7 @@ function TicketstackBody(tableParent, inputParent) {
 
     /** Called if down-button of ticket ticketId was clicked */
     var onDownClick=function(ticketId) {
-    	log("onUpClick("+ticketId+")");
+    	log("onDownClick("+ticketId+")");
     	$.ajax({
     		type: "POST",
     		url:  baseRestUrl+ticketId+"/down",
@@ -206,17 +208,18 @@ function TicketstackBody(tableParent, inputParent) {
     	type: 'button',
     	value: 'Add'
     	}).click(function() {
+    		// onAddClicked()
     		var newTicket=$('#ts_app_inp_ticket').val();
     		var newText=$('#ts_app_inp_text').val();
 
-    		log("fake adding: ticket:"+newTicket+" text:"+newText);
-    		// onAddClicked()
+    		log("adding: ticket:"+newTicket+" text:"+newText);
+
     		$.ajax({
     			type: 'POST',
     			url: baseRestUrl,
     			contentType: 'application/json',
-    			data: JSON.stringify({ ticket: newTicket, text: newText, prio: -1 }),
     			dataType: 'json',
+    			data: JSON.stringify({ ticket: newTicket, text: newText, prio: -1 }),
     			success: function(data, status, jqXHR) {
     				// TODO optimize to insert row in model instead of reload data
     				loadData();

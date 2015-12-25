@@ -37,9 +37,9 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 
 	@Transactional
 	public void insertTicket(TicketEntry ticketEntry) {
+//				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(
-				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
-				ticketEntry.getPrio(),
+				"insert into tickets (prio, text, ticket) select min(prio)-1, ?, ? from tickets",
 				ticketEntry.getText(),
 				ticketEntry.getTicket());
 	}
@@ -68,31 +68,42 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 				"select * from tickets where prio > ? order by prio limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
-		updatePrio(thisTicket.getTicket(), ticketAfter.getPrio());
-		updatePrio(ticketAfter.getTicket(), thisTicket.getPrio());
+		swapPrios(thisTicket, ticketAfter);
 	}
 
 	@Transactional
-	public void moveTicketUp(String ticket) {
+	public boolean moveTicketUp(final String ticket) {
 		TicketEntry thisTicket=getTicketEntry(ticket);
+		if(thisTicket==null)
+			return false;
 		// select the ticket just before this ticket
 		TicketEntry ticketBefore=jdbcTemplate.queryForObject(
 				"select * from tickets where prio < ? order by prio desc limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
-		updatePrio(thisTicket.getTicket(), ticketBefore.getPrio());
-		updatePrio(ticketBefore.getTicket(), thisTicket.getPrio());
+		if(ticketBefore==null)
+			return true;
+		
+		swapPrios(thisTicket, ticketBefore);
+		return true;
 	}
 	
+	private void swapPrios(TicketEntry t1, TicketEntry t2) {
+		final int tmpPrio=jdbcTemplate.queryForObject("select max(prio)+1000 from tickets", Integer.class);
+		updatePrio(t1.getTicket(), tmpPrio);
+		updatePrio(t2.getTicket(), t1.getPrio());
+		updatePrio(t1.getTicket(), t2.getPrio());
+	}
+
 	private void updatePrio(String ticket, int prio)  {
 		jdbcTemplate.update(
 				"update tickets set prio=? where ticket= ?",
 				prio, ticket);
 	}
 
-	public void removeTicketEntry(String ticket) {
-		jdbcTemplate.update(
-				"delete from tickets where ticket= ?",
+	public int removeTicketEntry(String ticket) {
+		return jdbcTemplate.update(
+				"delete from tickets where ticket=?",
 				ticket);
 	}
 
