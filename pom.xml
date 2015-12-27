@@ -4,8 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.happypeople.ticketstack</groupId>
   <artifactId>Ticketstack</artifactId>
-  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
   <name>Ticketstack simple app</name>
 
 	<parent> <!-- this project is bases on spring boot -->

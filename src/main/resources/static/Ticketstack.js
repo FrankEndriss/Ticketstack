@@ -98,7 +98,7 @@ function TicketstackBody(tableParent, inputParent) {
     var model=new TSTableModel();
 
     // rest api url, should be externalized
-	var baseRestUrl= "http://localhost:8080/api/";
+	var baseRestUrl= "api/";
 
     /** Loads the complete list from the backend and puts the
      * data into the model. Which causes a redisplay of the data-table.
