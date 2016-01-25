@@ -13,6 +13,20 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/*
+CREATE TABLE tickets
+(
+  ticket character varying(256) NOT NULL,
+  text character varying(2048),
+  prio integer,
+  CONSTRAINT tickets_pkey PRIMARY KEY (ticket)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tickets
+  OWNER TO postgres;
+*/
 @Component
 public class TicketEntryDaoImpl implements TicketEntryDao {
     private final static Logger log = Logger.getLogger(TicketEntryDaoImpl.class);
@@ -46,7 +60,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 
 	public TicketEntry getTicketEntry(final String ticket) {
 		return jdbcTemplate.queryForObject(
-				"select * from tickets where ticket = ?",
+				"select prio, text, ticket from tickets where ticket = ?",
 				new Object[]{ ticket },
 				teRowMapper);
 	}

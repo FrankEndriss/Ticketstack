@@ -16,6 +16,10 @@
 	</parent>
 
 
+	<properties>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -59,7 +63,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>Ticketstack</finalName>
+		<finalName>Ticketstack##${maven.build.timestamp}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -2,6 +2,7 @@ package net.neobp.ticketstack;
 
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -11,15 +12,17 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 public class ApplicationMain {
 
+    private final static Logger log = Logger.getLogger(ApplicationMain.class);
+
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(ApplicationMain.class, args);
 
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for(String beanName : beanNames) {
-            System.out.println("beans listing: "+beanName);
+        if(log.isDebugEnabled()) {
+        	log.debug("Let's inspect the beans provided by Spring Boot:");
+        	final String[] beanNames = ctx.getBeanDefinitionNames();
+        	Arrays.sort(beanNames);
+        	for(final String beanName : beanNames)
+        		log.debug("beans listing: "+beanName);
         }
     }
 }
