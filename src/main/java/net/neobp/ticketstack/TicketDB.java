@@ -203,7 +203,7 @@ public class TicketDB {
 	}
 
 	/** Wipes out the complete database.
-	 * TODO: Wenn Mandantenfähig, dann wipe(mandant)
+	 * TODO: Wenn Mandantenfaehig, dann wipe(mandant)
 	 */
 	/*
 	public static void wipe() {

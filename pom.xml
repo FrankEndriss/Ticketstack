@@ -5,7 +5,7 @@
   <groupId>com.happypeople.ticketstack</groupId>
   <artifactId>Ticketstack</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>Ticketstack simple app</name>
 
@@ -30,7 +30,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		
+
+	<!-- needed for packaging as WAR -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>	
+
 	<!-- TODO find junit in spring boot, that must exist as a feature -->
 		<dependency>
 			<groupId>junit</groupId>

@@ -18,8 +18,8 @@ function writeHeader() {
 function writeFooter() {
 	$("#ts_appFooter").append(
         	'<p>TODO:'+
-            '<br/>-mit Buttons hoch/runter, erfordert separate Datenhaltung'+
-            '<br/>-Wiedervorlage an bestimmtem Datum, also extra-Liste per Datum'+
+            '<br/>window.location='+window.location+
+            '<br/>window.location.origin='+window.location.origin+
             '<p/>');
 
 }
@@ -98,7 +98,8 @@ function TicketstackBody(tableParent, inputParent) {
     var model=new TSTableModel();
 
     // rest api url, should be externalized
-	var baseRestUrl= "api/";
+	var baseRestUrl= ''+window.location+'api/';
+	log('using baseRestUrl: '+baseRestUrl);
 
     /** Loads the complete list from the backend and puts the
      * data into the model. Which causes a redisplay of the data-table.

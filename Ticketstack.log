@@ -1,0 +1,227 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v1.3.2.RELEASE)
+
+2016-02-08 08:08:08.659  INFO 10096 --- [           main] net.neobp.ticketstack.ApplicationMain    : Starting ApplicationMain v0.0.1-SNAPSHOT on DE17-NEO1093-L with PID 10096 (C:\home\fendriss\git\Ticketstack\target\Ticketstack##201602010741.jar started by fendriss in C:\home\fendriss\git\Ticketstack)
+2016-02-08 08:08:08.664  INFO 10096 --- [           main] net.neobp.ticketstack.ApplicationMain    : No active profile set, falling back to default profiles: default
+2016-02-08 08:08:08.727  INFO 10096 --- [           main] ationConfigEmbeddedWebApplicationContext : Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@48043d11: startup date [Mon Feb 08 08:08:08 CET 2016]; root of context hierarchy
+2016-02-08 08:08:09.560  INFO 10096 --- [           main] o.s.b.f.s.DefaultListableBeanFactory     : Overriding bean definition for bean 'beanNameViewResolver' with a different definition: replacing [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration$WhitelabelErrorViewConfiguration; factoryMethodName=beanNameViewResolver; initMethodName=null; destroyMethodName=(inferred); defined in class path resource [org/springframework/boot/autoconfigure/web/ErrorMvcAutoConfiguration$WhitelabelErrorViewConfiguration.class]] with [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter; factoryMethodName=beanNameViewResolver; initMethodName=null; destroyMethodName=(inferred); defined in class path resource [org/springframework/boot/autoconfigure/web/WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter.class]]
+2016-02-08 08:08:09.816  INFO 10096 --- [           main] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2016-02-08 08:08:09.884  INFO 10096 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e6f47696] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2016-02-08 08:08:11.108  INFO 10096 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat initialized with port(s): 8080 (http)
+2016-02-08 08:08:11.122  INFO 10096 --- [           main] o.apache.catalina.core.StandardService   : Starting service Tomcat
+2016-02-08 08:08:11.123  INFO 10096 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.0.30
+2016-02-08 08:08:11.250  INFO 10096 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2016-02-08 08:08:11.250  INFO 10096 --- [ost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2527 ms
+2016-02-08 08:08:11.756  INFO 10096 --- [ost-startStop-1] o.s.b.c.e.ServletRegistrationBean        : Mapping servlet: 'dispatcherServlet' to [/]
+2016-02-08 08:08:11.764  INFO 10096 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'characterEncodingFilter' to: [/*]
+2016-02-08 08:08:11.764  INFO 10096 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2016-02-08 08:08:11.764  INFO 10096 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2016-02-08 08:08:11.764  INFO 10096 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'requestContextFilter' to: [/*]
+2016-02-08 08:08:12.022  INFO 10096 --- [           main] n.neobp.ticketstack.TicketEntryDaoImpl   : TicketEntryDaoImpl created
+2016-02-08 08:08:12.050  INFO 10096 --- [           main] n.neobp.ticketstack.TicketEntryResource  : TicketEntryResource created
+2016-02-08 08:08:12.359  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@48043d11: startup date [Mon Feb 08 08:08:08 CET 2016]; root of context hierarchy
+2016-02-08 08:08:12.491  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/{id}/down],methods=[POST]}" onto public void net.neobp.ticketstack.TicketEntryResource.moveTicketDown(java.lang.String)
+2016-02-08 08:08:12.493  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/{id}/up],methods=[POST]}" onto public org.springframework.http.ResponseEntity<java.lang.Void> net.neobp.ticketstack.TicketEntryResource.moveTicketUp(java.lang.String)
+2016-02-08 08:08:12.493  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/{id}/delete],methods=[POST]}" onto public void net.neobp.ticketstack.TicketEntryResource.deleteTicket(java.lang.String)
+2016-02-08 08:08:12.493  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/],methods=[GET]}" onto public java.util.List<net.neobp.ticketstack.TicketEntry> net.neobp.ticketstack.TicketEntryResource.getAllTicketEntries()
+2016-02-08 08:08:12.493  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/{id}],methods=[GET]}" onto public org.springframework.http.ResponseEntity<net.neobp.ticketstack.TicketEntry> net.neobp.ticketstack.TicketEntryResource.getTicketEntry(java.lang.String)
+2016-02-08 08:08:12.493  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/api/],methods=[POST]}" onto public org.springframework.http.ResponseEntity<net.neobp.ticketstack.TicketEntry> net.neobp.ticketstack.TicketEntryResource.insertTicket(net.neobp.ticketstack.TicketEntry)
+2016-02-08 08:08:12.497  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2016-02-08 08:08:12.497  INFO 10096 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2016-02-08 08:08:12.501  INFO 10096 --- [           main] o.s.w.s.c.a.WebMvcConfigurerAdapter      : Adding welcome page: class path resource [static/index.html]
+2016-02-08 08:08:12.521  INFO 10096 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Root mapping to handler of type [class org.springframework.web.servlet.mvc.ParameterizableViewController]
+2016-02-08 08:08:12.540  INFO 10096 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-02-08 08:08:12.540  INFO 10096 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-02-08 08:08:12.597  INFO 10096 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2016-02-08 08:08:12.825  INFO 10096 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+2016-02-08 08:08:12.924  INFO 10096 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+2016-02-08 08:08:12.929  INFO 10096 --- [           main] net.neobp.ticketstack.ApplicationMain    : Started ApplicationMain in 4.719 seconds (JVM running for 5.465)
+2016-02-08 08:08:21.278  INFO 10096 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring FrameworkServlet 'dispatcherServlet'
+2016-02-08 08:08:21.279  INFO 10096 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization started
+2016-02-08 08:08:21.324  INFO 10096 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization completed in 44 ms
+2016-02-08 08:08:21.527  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -15 Notification synchronization funktioniert nicht richtig
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-08 08:08:22.298  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 07:55:55.254  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 07:55:55.261  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -15 Notification synchronization funktioniert nicht richtig
+2016-02-09 07:55:55.261  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 07:55:55.262  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 07:55:55.262  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 07:55:55.262  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 07:55:55.262  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 08:14:29.626  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry=net.neobp.ticketstack.TicketEntry@52be109b
+2016-02-09 08:14:29.626  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.ticket=Info-Ticket
+2016-02-09 08:14:29.626  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.text=Mögliche MAI-Optimierungen
+2016-02-09 08:14:29.715  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -16 Mögliche MAI-Optimierungen
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -15 Notification synchronization funktioniert nicht richtig
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 08:14:29.717  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 08:15:47.762  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : deleteTicket called, SENVION_W-378
+2016-02-09 08:16:42.413  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry=net.neobp.ticketstack.TicketEntry@3962336b
+2016-02-09 08:16:42.413  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.ticket=SENVION_W-378
+2016-02-09 08:16:42.413  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.text=Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 08:16:42.442  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 08:16:42.444  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -17 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 08:16:42.444  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -16 Mögliche MAI-Optimierungen
+2016-02-09 08:16:42.444  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 08:16:42.444  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 08:16:42.445  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 08:16:42.445  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 08:16:42.445  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:43.417  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry=net.neobp.ticketstack.TicketEntry@3582df1e
+2016-02-09 09:01:43.418  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.ticket=Activiti
+2016-02-09 09:01:43.418  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.text=http://www.activiti.org/
+2016-02-09 09:01:43.445  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:43.447  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -18 http://www.activiti.org/
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -17 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -16 Mögliche MAI-Optimierungen
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:43.448  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:45.438  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:45.477  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -17 http://www.activiti.org/
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -16 Mögliche MAI-Optimierungen
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:45.479  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:46.573  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:46.599  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:46.602  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:46.602  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -17 Mögliche MAI-Optimierungen
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -16 http://www.activiti.org/
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -14 machen
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:46.603  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:47.420  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:47.443  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -17 Mögliche MAI-Optimierungen
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -16 machen
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -14 http://www.activiti.org/
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -13 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:47.445  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:47.446  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:47.446  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:48.324  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:48.345  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:48.347  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:48.347  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -17 Mögliche MAI-Optimierungen
+2016-02-09 09:01:48.347  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -16 machen
+2016-02-09 09:01:48.347  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -14 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:48.347  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -13 http://www.activiti.org/
+2016-02-09 09:01:48.348  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -10 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:48.348  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:48.348  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:49.379  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:49.402  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:49.404  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:49.404  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -17 Mögliche MAI-Optimierungen
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -16 machen
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -14 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -13 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -10 http://www.activiti.org/
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -1 Auslieferungstermin festlegen
+2016-02-09 09:01:49.405  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 09:01:50.325  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Activiti
+2016-02-09 09:01:50.350  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 09:01:50.352  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 09:01:50.352  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -17 Mögliche MAI-Optimierungen
+2016-02-09 09:01:50.352  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -16 machen
+2016-02-09 09:01:50.352  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -14 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 09:01:50.352  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -13 Für Westphal Nachricht schreiben.
+2016-02-09 09:01:50.353  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 09:01:50.353  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 09:01:50.353  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 12:49:41.249  INFO 10096 --- [nio-8080-exec-5] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Info-Ticket
+2016-02-09 12:49:41.276  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 12:49:41.278  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 12:49:41.278  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-09 12:49:41.278  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -16 Mögliche MAI-Optimierungen
+2016-02-09 12:49:41.278  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -14 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 12:49:41.279  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -13 Für Westphal Nachricht schreiben.
+2016-02-09 12:49:41.279  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 12:49:41.279  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 12:49:41.279  INFO 10096 --- [nio-8080-exec-3] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 12:49:42.341  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : moveTicketDown() called: Info-Ticket
+2016-02-09 12:49:42.361  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 12:49:42.363  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 12:49:42.363  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-09 12:49:42.363  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -16 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 12:49:42.363  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Info-Ticket -14 Mögliche MAI-Optimierungen
+2016-02-09 12:49:42.364  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-368 -13 Für Westphal Nachricht schreiben.
+2016-02-09 12:49:42.364  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 12:49:42.364  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 12:49:42.364  INFO 10096 --- [nio-8080-exec-2] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 12:49:45.139  INFO 10096 --- [nio-8080-exec-6] n.neobp.ticketstack.TicketEntryResource  : deleteTicket called, Info-Ticket
+2016-02-09 12:49:59.360  INFO 10096 --- [nio-8080-exec-7] n.neobp.ticketstack.TicketEntryResource  : deleteTicket called, SENVION_W-368
+2016-02-09 12:58:00.032  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry=net.neobp.ticketstack.TicketEntry@41bac012
+2016-02-09 12:58:00.033  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.ticket=SENVION_W-369
+2016-02-09 12:58:00.033  INFO 10096 --- [nio-8080-exec-9] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.text=Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-09 12:58:00.060  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 12:58:00.062  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-369 -19 Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -16 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 12:58:00.063  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 13:02:23.302  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry=net.neobp.ticketstack.TicketEntry@5337a002
+2016-02-09 13:02:23.303  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.ticket=SENVION_W-367
+2016-02-09 13:02:23.305  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : insertTicket() called, ticketEntry.text=Analyse wie Sync-Gruppen bei mehreren UserIDs funktionieren, und warum das "gelegentlich" schief gehen kann.
+2016-02-09 13:02:23.329  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 13:02:23.333  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-367 -20 Analyse wie Sync-Gruppen bei mehreren UserIDs funktionieren, und warum das "gelegentlich" schief gehen kann.
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-369 -19 Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-385 -16 When technicians set the turbine status 'OFF - work started' on a turbine that is already off (breakdown), any internal comment they input does not appear in the backend.
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 13:02:23.334  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-09 15:13:03.313  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : deleteTicket called, SENVION_W-385
+2016-02-09 16:55:09.630  INFO 10096 --- [nio-8080-exec-8] n.neobp.ticketstack.TicketEntryResource  : moveTicketUp() called: SENVION_W-369
+2016-02-09 16:55:09.659  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-09 16:55:09.661  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-369 -20 Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-09 16:55:09.662  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-367 -19 Analyse wie Sync-Gruppen bei mehreren UserIDs funktionieren, und warum das "gelegentlich" schief gehen kann.
+2016-02-09 16:55:09.662  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-09 16:55:09.662  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-09 16:55:09.662  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-09 16:55:09.662  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-09 16:55:09.663  INFO 10096 --- [nio-8080-exec-4] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-10 08:19:22.808  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-369 -20 Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-367 -19 Analyse wie Sync-Gruppen bei mehreren UserIDs funktionieren, und warum das "gelegentlich" schief gehen kann.
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-10 08:19:22.813  INFO 10096 --- [nio-8080-exec-1] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
+2016-02-10 09:04:44.344  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : getAllTicketEntries() called
+2016-02-10 09:04:44.346  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-369 -20 Hist Belege, Rücksprache ThZa bzgl Implementierungsmöglichkeiten
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-367 -19 Analyse wie Sync-Gruppen bei mehreren UserIDs funktionieren, und warum das "gelegentlich" schief gehen kann.
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: SENVION_W-378 -18 Zusammenfassung schreiben, Massnahmen implementieren, commit, merge, Auslieferung klären.
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: REPOWER_W-869 -17 machen
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: KVB_WASU-305 -10 Auslieferungstermin festlegen
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : ticketEntry: Activiti -1 http://www.activiti.org/
+2016-02-10 09:04:44.347  INFO 10096 --- [io-8080-exec-10] n.neobp.ticketstack.TicketEntryResource  : end of List<TicketEntry>
