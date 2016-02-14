@@ -76,13 +76,20 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	}
 
 	@Transactional
-	public void moveTicketDown(String ticket) {
-		TicketEntry thisTicket=getTicketEntry(ticket);
-		TicketEntry ticketAfter=jdbcTemplate.queryForObject(
+	public boolean moveTicketDown(String ticket) {
+		final TicketEntry thisTicket=getTicketEntry(ticket);
+		if(thisTicket==null)
+			return false;
+		// select the ticket just after this ticket
+		final TicketEntry ticketAfter=jdbcTemplate.queryForObject(
 				"select * from tickets where prio > ? order by prio limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
+		if(ticketAfter==null)
+			return false;
+
 		swapPrios(thisTicket, ticketAfter);
+		return true;
 	}
 
 	@Transactional
@@ -96,7 +103,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
 		if(ticketBefore==null)
-			return true;
+			return false;
 		
 		swapPrios(thisTicket, ticketBefore);
 		return true;

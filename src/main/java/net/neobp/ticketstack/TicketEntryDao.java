@@ -32,8 +32,9 @@ public interface TicketEntryDao {
 	/** Swaps the priorities of the ticket with id id, and the ticket just after that ticket 
 	 * (in a imaginary list where the tickets are sortet by prio)
 	 * @param id
+	 * @return 
 	 */
-	void moveTicketDown(String id);
+	boolean moveTicketDown(String id);
 
 	/** Removes a TicketEntry
 	 * @param id

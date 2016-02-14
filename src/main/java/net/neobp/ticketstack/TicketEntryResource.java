@@ -81,16 +81,22 @@ public class TicketEntryResource {
 		} else if(teDao.getTicketEntry(id)==null)
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		else
-			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			
 	}
 	
 //	@POST
 //	@Path("{id}/down")
 	@RequestMapping(value="/{id}/down", method=RequestMethod.POST)
-	public void moveTicketDown(@PathVariable("id") final String id) {
+	public ResponseEntity<Void> moveTicketDown(@PathVariable("id") final String id) {
 		log.info("moveTicketDown() called: "+id);
-		teDao.moveTicketDown(id);
+		if(teDao.moveTicketDown(id)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else if(teDao.getTicketEntry(id)==null)
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			
 	}
 	
 //	@POST
