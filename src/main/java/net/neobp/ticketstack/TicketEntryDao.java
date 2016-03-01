@@ -11,6 +11,13 @@ public interface TicketEntryDao {
 	 */
 	List<TicketEntry> getAllTicketEntries();
 
+
+	/**
+	 * @param ticketEntry the entry to update
+	 * @param updText the new text for that ticket
+	 */
+	void updateTicketText(TicketEntry ticketEntry, String updText);
+
 	/**
 	 * @param ticketEntry a new ticket entry
 	 */

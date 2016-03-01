@@ -50,6 +50,14 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	}
 
 	@Transactional
+	public void updateTicketText(TicketEntry ticketEntry, String updText) {
+		jdbcTemplate.update(
+			"update tickets set text = ? where ticket = ?",
+			updText,
+			ticketEntry.getTicket());
+	}
+
+	@Transactional
 	public void insertTicket(TicketEntry ticketEntry) {
 //				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(

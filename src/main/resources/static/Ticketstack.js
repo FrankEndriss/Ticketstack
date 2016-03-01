@@ -47,6 +47,7 @@ function TicketstackBody(tableParent, inputParent) {
                     {
                     	accessor: 'buttonDown',
                     	headertext: 'Down',
+                    	minWidth: 50,
                     	renderer: new TSDefaultRenderer(
                     				function($td, model, row, col) {
                     					var ticketId=model.getValue(row, "ticket");
@@ -76,7 +77,17 @@ function TicketstackBody(tableParent, inputParent) {
                     },
                     {
                     	accessor: 'text',
-                    	headertext: 'Text'
+                    	headertext: 'Text',
+			renderer: new TSDefaultRenderer( 
+					function($td, model, row, col) {
+						$td.text(model.getValue(row, col));
+						$td.click(function() {
+							// set ticket-id and ticket text in input-form
+ 							$('#ts_app_inp_ticket').val(model.getValue(row, 'ticket'));
+ 							$('#ts_app_inp_text').val(model.getValue(row, 'text'));
+						});
+					}
+				)
                     },
                     {
                     	accessor: 'buttonDel',
@@ -96,6 +107,12 @@ function TicketstackBody(tableParent, inputParent) {
     
     // data model of the table
     var model=new TSTableModel();
+	model.keyExists=function(key) {
+		for(var i=0; i<model.size(); i++)
+			if(model.getValue()==key)
+				return true;
+		return false;
+	}
 
     // rest api url, should be externalized
 	var baseRestUrl= ''+window.location+'api/';
@@ -191,6 +208,7 @@ function TicketstackBody(tableParent, inputParent) {
     	type: 'text',
     	id: 'ts_app_inp_ticket',
     }));
+
     
     $('<label>', {
     	for: 'ts_app_inp_text'
@@ -207,9 +225,8 @@ function TicketstackBody(tableParent, inputParent) {
     $div.append($('<input>', {
     	id: 'addButton',
     	type: 'button',
-    	value: 'Add'
+    	value: 'Add/Update'
     	}).click(function() {
-    		// onAddClicked()
     		var newTicket=$('#ts_app_inp_ticket').val();
     		var newText=$('#ts_app_inp_text').val();
 
@@ -233,6 +250,19 @@ function TicketstackBody(tableParent, inputParent) {
     
     $div.addClass('bordered');
     inputParent.append($form);
+
+/* On "input" handler does not work allways for some reason */
+	$('#ts_app_inp_ticket').on('input', function(evt) {
+		// if text_of_input is existing ticketID
+		// then buttonText="Update"
+		// else buttonText="Add"
+    		log("input_ID changed: "+$(this).val());
+		var buttonString='Add';
+		if(model.keyExists($(this).val()))
+			buttonString='Update';
+    		log("exists: "+buttonString);
+		$('#addButton').val(buttonString);
+	});
 
     
     // initially load the table data from the backend

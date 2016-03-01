@@ -42,25 +42,43 @@ public class TicketEntryResource {
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public ResponseEntity<TicketEntry> insertTicket(@RequestBody TicketEntry ticketEntry) {
+	public ResponseEntity<TicketEntry> upsertTicket(@RequestBody TicketEntry ticketEntry) {
 		log.info("insertTicket() called, ticketEntry="+ticketEntry);
 		if(ticketEntry!=null) {
 			log.info("insertTicket() called, ticketEntry.ticket="+ticketEntry.getTicket());
 			log.info("insertTicket() called, ticketEntry.text="+ticketEntry.getText());
 		}
+		TicketEntry te=null;
 		try {
-			teDao.insertTicket(ticketEntry);
+			te=teDao.getTicketEntry(ticketEntry.getTicket());
+		}catch(Exception e) {
+			// ignore
+		}
+
+		try {
+			if(te!=null)
+				teDao.updateTicketText(te, ticketEntry.getText());
+			else
+				teDao.insertTicket(ticketEntry);
 			return new ResponseEntity<TicketEntry>(teDao.getTicketEntry(ticketEntry.getTicket()), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<TicketEntry>(HttpStatus.CONFLICT);
 		}
 	}
 	
+	@RequestMapping(value="/{id}/text", method=RequestMethod.PUT)
+	public ResponseEntity<TicketEntry> updTicketEntryText(@PathVariable("id") final String id, @RequestBody TicketEntry ticketEntry) {
+		TicketEntry ret=teDao.getTicketEntry(id);
+		if(ret==null)
+			return new ResponseEntity<TicketEntry>(HttpStatus.NOT_FOUND);
+
+		teDao.updateTicketText(ret, ticketEntry.getText());
+		return new ResponseEntity<TicketEntry>(teDao.getTicketEntry(id), HttpStatus.OK);
+	}
+
 	/** @param id of TicketEntry
 	 *  @return Ticket with ID id
 	 */
-//	@GET
-//	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<TicketEntry> getTicketEntry( @PathVariable("id") final String id) {
 		log.info("getTicketEntry() called: "+id);
@@ -71,8 +89,6 @@ public class TicketEntryResource {
 			return new ResponseEntity<TicketEntry>(HttpStatus.NOT_FOUND);
 	}
 
-//	@POST
-//	@Path("{id}/up")
 	@RequestMapping(value="/{id}/up", method=RequestMethod.POST)
 	public ResponseEntity<Void> moveTicketUp( @PathVariable("id") final String id) {
 		log.info("moveTicketUp() called: "+id);
@@ -85,8 +101,6 @@ public class TicketEntryResource {
 			
 	}
 	
-//	@POST
-//	@Path("{id}/down")
 	@RequestMapping(value="/{id}/down", method=RequestMethod.POST)
 	public ResponseEntity<Void> moveTicketDown(@PathVariable("id") final String id) {
 		log.info("moveTicketDown() called: "+id);
@@ -99,8 +113,6 @@ public class TicketEntryResource {
 			
 	}
 	
-//	@POST
-//	@Path("{id}/delete")
 	@RequestMapping(value="/{id}/delete", method=RequestMethod.POST)
 	public void deleteTicket(@PathVariable("id") final String id) {
 		log.info("deleteTicket called, "+id);
