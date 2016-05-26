@@ -21,7 +21,9 @@
 	</properties>
 
 	<dependencies>
-<!-- this is needed to use log4j logging -->
+<!-- this is needed to use log4j logging, see
+http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-configure-log4j-for-logging
+ -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
