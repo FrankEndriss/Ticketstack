@@ -61,6 +61,9 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	public void insertTicket(TicketEntry ticketEntry) {
 //				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(
+
+// TODO: "min(prio)-1" returns null if the table is empty, need to fix
+// Fix by implementing MinPrioService??? It is fairly unspecified how to synchronize in sql.
 				"insert into tickets (prio, text, ticket) select min(prio)-1, ?, ? from tickets",
 				ticketEntry.getText(),
 				ticketEntry.getTicket());
