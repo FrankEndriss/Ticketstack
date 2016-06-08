@@ -55,7 +55,9 @@ http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-confi
 			<scope>provided</scope>
 		</dependency>	
 
-	<!-- TODO find junit in spring boot, that must exist as a feature -->
+	<!-- TODO find junit in spring boot, that must exist as a feature 
+... somthing like spring-boot-starter-tester or the like ...
+-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -75,14 +77,6 @@ http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-confi
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
-
-	<!--
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		</dependency>
-	-->
 
 	</dependencies>
 
