@@ -34,7 +34,7 @@ public class TicketEntryResource {
 		log.info("getAllTicketEntries() called");
 		final List<TicketEntry> ticketEntries=teDao.getAllTicketEntries();
 		if(log.isInfoEnabled()) {
-			for(TicketEntry te : ticketEntries)
+			for(final TicketEntry te : ticketEntries)
 				log.info("ticketEntry: "+te.getTicket()+" "+te.getPrio()+" "+te.getText());
 			log.info("end of List<TicketEntry>");
 		}
@@ -42,7 +42,7 @@ public class TicketEntryResource {
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public ResponseEntity<TicketEntry> upsertTicket(@RequestBody TicketEntry ticketEntry) {
+	public ResponseEntity<TicketEntry> upsertTicket(@RequestBody final TicketEntry ticketEntry) {
 		log.info("insertTicket() called, ticketEntry="+ticketEntry);
 		if(ticketEntry!=null) {
 			log.info("insertTicket() called, ticketEntry.ticket="+ticketEntry.getTicket());
@@ -51,7 +51,7 @@ public class TicketEntryResource {
 		TicketEntry te=null;
 		try {
 			te=teDao.getTicketEntry(ticketEntry.getTicket());
-		}catch(Exception e) {
+		}catch(final Exception e) {
 			// ignore
 		}
 
@@ -61,14 +61,14 @@ public class TicketEntryResource {
 			else
 				teDao.insertTicket(ticketEntry);
 			return new ResponseEntity<TicketEntry>(teDao.getTicketEntry(ticketEntry.getTicket()), HttpStatus.OK);
-		}catch(Exception e) {
+		}catch(final Exception e) {
 			return new ResponseEntity<TicketEntry>(HttpStatus.CONFLICT);
 		}
 	}
 	
 	@RequestMapping(value="/{id}/text", method=RequestMethod.PUT)
-	public ResponseEntity<TicketEntry> updTicketEntryText(@PathVariable("id") final String id, @RequestBody TicketEntry ticketEntry) {
-		TicketEntry ret=teDao.getTicketEntry(id);
+	public ResponseEntity<TicketEntry> updTicketEntryText(@PathVariable("id") final String id, @RequestBody final TicketEntry ticketEntry) {
+		final TicketEntry ret=teDao.getTicketEntry(id);
 		if(ret==null)
 			return new ResponseEntity<TicketEntry>(HttpStatus.NOT_FOUND);
 
@@ -82,7 +82,7 @@ public class TicketEntryResource {
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<TicketEntry> getTicketEntry( @PathVariable("id") final String id) {
 		log.info("getTicketEntry() called: "+id);
-		TicketEntry ret=teDao.getTicketEntry(id);
+		final TicketEntry ret=teDao.getTicketEntry(id);
 		if(ret!=null)
 			return new ResponseEntity<TicketEntry>(ret, HttpStatus.OK);
 		else 

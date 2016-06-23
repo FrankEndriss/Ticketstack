@@ -35,19 +35,19 @@ public class TicketDB {
 		InputStream in=null;
 		try {
 			in=new FileInputStream(dbFile);
-		}catch(Exception e) {
+		}catch(final Exception e) {
 			throw new RuntimeException("PersistenceException while loading, data not readable", e) ;
 		}
 		
-		Properties props=new Properties();
+		final Properties props=new Properties();
 		try {
 			props.load(in);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException("PersistenceException while loading data", e) ;
 		} finally {
 			try {
 				in.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 		}
@@ -55,11 +55,11 @@ public class TicketDB {
 		int i=0;
 		while(true) {
 			final String propId="_ticket_"+(i++);
-			String ticketId=props.getProperty(propId);
+			final String ticketId=props.getProperty(propId);
 			if(ticketId==null)
 				break;
 			
-			TicketEntry ticketEntry=new TicketEntry();
+			final TicketEntry ticketEntry=new TicketEntry();
 			ticketEntry.setTicket(ticketId);
 			ticketEntry.setText(props.getProperty(propId+".text", ""));
 			ticketEntry.setPrio(Integer.parseInt(props.getProperty(propId+".prio", "0")));
@@ -78,7 +78,7 @@ public class TicketDB {
 
 		final Properties props=new Properties();
 		int i=0;
-		for(TicketEntry t : tickets.values()) {
+		for(final TicketEntry t : tickets.values()) {
 			final String propId="_ticket_"+(i++);
 			props.put(propId, t.getTicket());
 			props.put(propId+".prio", ""+t.getPrio());
@@ -90,7 +90,7 @@ public class TicketDB {
 			out=new FileOutputStream(dbFile);
 			props.store(out, "saved on "+new Date());
 			out.close();
-		}catch(Exception e) {
+		}catch(final Exception e) {
 			throw new RuntimeException("PersistenceException while saving to: "+dbFile.getAbsolutePath(), e) ;
 		}
 	}
@@ -100,7 +100,7 @@ public class TicketDB {
 	}
 	
 	public static List<TicketEntry> getAllTicketEntries() {
-		List<TicketEntry> retList=new ArrayList<TicketEntry>(tickets.values());
+		final List<TicketEntry> retList=new ArrayList<TicketEntry>(tickets.values());
 		Collections.sort(retList, prioComparator);
 		return retList;
 	}
@@ -131,7 +131,7 @@ public class TicketDB {
 				1;
 		ticketEntry.setPrio(firstPrio);
 		// adjust prio of all other tickets
-		for(TicketEntry te : ltickets) {
+		for(final TicketEntry te : ltickets) {
 			te.setPrio(te.getPrio()+1);
 		}
 		
@@ -153,7 +153,8 @@ public class TicketDB {
 	
 
 	private final static Comparator<TicketEntry> prioComparator=new Comparator<TicketEntry>() {
-			public int compare(TicketEntry o1, TicketEntry o2) {
+			@Override
+			public int compare(final TicketEntry o1, final TicketEntry o2) {
 				return o1.getPrio()-o2.getPrio();
 			}
 		};
@@ -167,13 +168,13 @@ public class TicketDB {
 		if(ticketEntry==null)
 			throw new IllegalArgumentException("notfound: "+id);
 		
-		List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
+		final List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
 		Collections.sort(entries, prioComparator);
 		
-		int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
+		final int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
 		System.out.println("found at: "+idx);
 		if(idx>=0 && idx<entries.size()-1) { // found and not last, swap prio with next ticket
-			int nextPrio=entries.get(idx+1).getPrio();
+			final int nextPrio=entries.get(idx+1).getPrio();
 			entries.get(idx+1).setPrio(ticketEntry.getPrio());
 			ticketEntry.setPrio(nextPrio);
 		}
@@ -189,13 +190,13 @@ public class TicketDB {
 		if(ticketEntry==null)
 			throw new IllegalArgumentException("notfound: "+id);
 		
-		List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
+		final List<TicketEntry> entries=new ArrayList<TicketEntry>(tickets.values());
 		Collections.sort(entries, prioComparator);
 		
-		int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
+		final int idx=Collections.binarySearch(entries, ticketEntry, prioComparator);
 		System.out.println("found at: "+idx);
 		if(idx>0) { // found and not first, swap prio with previous ticket
-			int prevPrio=entries.get(idx-1).getPrio();
+			final int prevPrio=entries.get(idx-1).getPrio();
 			entries.get(idx-1).setPrio(ticketEntry.getPrio());
 			ticketEntry.setPrio(prevPrio);
 		}
@@ -245,7 +246,7 @@ public class TicketDB {
 		
 		dbFile=new File(dbDir, "ticketstack.db");
 		if(!dbFile.exists()) {
-			FileWriter fw=new FileWriter(dbFile);
+			final FileWriter fw=new FileWriter(dbFile);
 			fw.write("// Ticketstack init");
 			fw.close();
 		}

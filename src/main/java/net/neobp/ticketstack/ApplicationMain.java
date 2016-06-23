@@ -17,8 +17,8 @@ public class ApplicationMain extends SpringBootServletInitializer {
 
     private final static Logger log = Logger.getLogger(ApplicationMain.class);
 
-    public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(ApplicationMain.class, args);
+    public static void main(final String[] args) {
+        final ApplicationContext ctx = SpringApplication.run(ApplicationMain.class, args);
 
         if(log.isDebugEnabled()) {
         	log.debug("Let's inspect the beans provided by Spring Boot:");
@@ -34,7 +34,7 @@ public class ApplicationMain extends SpringBootServletInitializer {
      * http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-create-a-deployable-war-file
      */
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
         return application.sources(ApplicationMain.class);
     }
 

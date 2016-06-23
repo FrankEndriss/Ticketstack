@@ -61,7 +61,7 @@ http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-confi
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<!-- <version>4.11</version> -->
 		</dependency>
 		
 	<!--  we want to use JSR-330 @Inject instead of @Autowired -->

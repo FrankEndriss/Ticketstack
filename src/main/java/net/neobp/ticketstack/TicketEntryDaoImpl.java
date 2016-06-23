@@ -43,22 +43,25 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		log.info("TicketEntryDaoImpl created");
 	}
 	
+	@Override
 	public List<TicketEntry> getAllTicketEntries() {
 		return jdbcTemplate.query(
 				"select * from tickets order by prio",
 				teRowMapper);
 	}
 
+	@Override
 	@Transactional
-	public void updateTicketText(TicketEntry ticketEntry, String updText) {
+	public void updateTicketText(final TicketEntry ticketEntry, final String updText) {
 		jdbcTemplate.update(
 			"update tickets set text = ? where ticket = ?",
 			updText,
 			ticketEntry.getTicket());
 	}
 
+	@Override
 	@Transactional
-	public void insertTicket(TicketEntry ticketEntry) {
+	public void insertTicket(final TicketEntry ticketEntry) {
 //				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(
 
@@ -69,6 +72,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 				ticketEntry.getTicket());
 	}
 
+	@Override
 	public TicketEntry getTicketEntry(final String ticket) {
 		return jdbcTemplate.queryForObject(
 				"select prio, text, ticket from tickets where ticket = ?",
@@ -77,7 +81,8 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	}
 
 	private class TicketEntryRowMapper implements RowMapper<TicketEntry> {
-		public TicketEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+		@Override
+		public TicketEntry mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final TicketEntry te=new TicketEntry();
 			te.setPrio(rs.getInt("prio"));
 			te.setText(rs.getString("text"));
@@ -86,8 +91,9 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		}
 	}
 
+	@Override
 	@Transactional
-	public boolean moveTicketDown(String ticket) {
+	public boolean moveTicketDown(final String ticket) {
 		final TicketEntry thisTicket=getTicketEntry(ticket);
 		if(thisTicket==null)
 			return false;
@@ -103,13 +109,14 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		return true;
 	}
 
+	@Override
 	@Transactional
 	public boolean moveTicketUp(final String ticket) {
-		TicketEntry thisTicket=getTicketEntry(ticket);
+		final TicketEntry thisTicket=getTicketEntry(ticket);
 		if(thisTicket==null)
 			return false;
 		// select the ticket just before this ticket
-		TicketEntry ticketBefore=jdbcTemplate.queryForObject(
+		final TicketEntry ticketBefore=jdbcTemplate.queryForObject(
 				"select * from tickets where prio < ? order by prio desc limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
@@ -120,20 +127,21 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		return true;
 	}
 	
-	private void swapPrios(TicketEntry t1, TicketEntry t2) {
+	private void swapPrios(final TicketEntry t1, final TicketEntry t2) {
 		final int tmpPrio=jdbcTemplate.queryForObject("select max(prio)+1000 from tickets", Integer.class);
 		updatePrio(t1.getTicket(), tmpPrio);
 		updatePrio(t2.getTicket(), t1.getPrio());
 		updatePrio(t1.getTicket(), t2.getPrio());
 	}
 
-	private void updatePrio(String ticket, int prio)  {
+	private void updatePrio(final String ticket, final int prio)  {
 		jdbcTemplate.update(
 				"update tickets set prio=? where ticket= ?",
 				prio, ticket);
 	}
 
-	public int removeTicketEntry(String ticket) {
+	@Override
+	public int removeTicketEntry(final String ticket) {
 		return jdbcTemplate.update(
 				"delete from tickets where ticket=?",
 				ticket);
