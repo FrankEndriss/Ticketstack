@@ -31,6 +31,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 	
+<!-- not sure if starter-web together with vaadin-start is good or bad -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-spring-boot-starter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
