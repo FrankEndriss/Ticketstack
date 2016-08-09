@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.ExternalResource;
@@ -14,24 +13,22 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.BaseTheme;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
 
 import net.neobp.ticketstack.TicketEntry;
 import net.neobp.ticketstack.TicketEntryDao;
 
-@SpringUI
+@SpringUI(path="vaadin")
 @Theme("valo")
 public class VaadinUi extends UI {
 	private final TicketEntryDao tedao;
@@ -43,16 +40,21 @@ public class VaadinUi extends UI {
 	@Autowired
 	public VaadinUi(final TicketEntryDao tedao) {
 		this.tedao=tedao;
-		this.table=new Table("Tickets");
-		this.table.addContainerProperty("Up", Button.class, null);
-		this.table.addContainerProperty("Down", Button.class, null);
-		this.table.addContainerProperty("Ticket", Link.class, null);
-		this.table.addContainerProperty("Text", VerticalLayout.class, null);
-		this.table.addContainerProperty("Delete", Button.class, null);
-		this.table.setWidth(80, Unit.PERCENTAGE);
+		this.table=createTable();
 		this.ticketid_textfield=new TextField("TicketID");
 		this.tickettext_textarea=new TextArea("Text");
 		this.tickettext_textarea.setRows(4);
+	}
+	
+	private static Table createTable() {
+		final Table table=new Table("Tickets");
+		table.addContainerProperty("Up", Button.class, null);
+		table.addContainerProperty("Down", Button.class, null);
+		table.addContainerProperty("Ticket", Link.class, null);
+		table.addContainerProperty("Text", VerticalLayout.class, null);
+		table.addContainerProperty("Delete", Button.class, null);
+		//table.setWidth(80, Unit.PERCENTAGE);
+		return table;
 	}
 
 	@Override
@@ -61,7 +63,11 @@ public class VaadinUi extends UI {
 		Label titel=new Label("<h2>Ticketstack<h2>", ContentMode.HTML);
 		
 		vertical_layout.addComponent(titel);
-		vertical_layout.addComponent(table);
+		final Panel tablePanel=new Panel("Tickets");
+		tablePanel.setWidth(98, Unit.PERCENTAGE);
+		table.setWidth(100, Unit.PERCENTAGE);
+		tablePanel.setContent(table);
+		vertical_layout.addComponent(tablePanel);
 		vertical_layout.addComponent(createEditor());
 		
 		setContent(vertical_layout);
@@ -96,12 +102,15 @@ public class VaadinUi extends UI {
 
 
 		tickettext_textarea.setWidth(100, Unit.PERCENTAGE);
-		form.setWidth(100, Unit.PERCENTAGE);
+		//form.setWidth(100, Unit.PERCENTAGE);
 		final VerticalLayout vlayout=new VerticalLayout();
-		vlayout.setWidth(80, Unit.PERCENTAGE);
+		//vlayout.setWidth(80, Unit.PERCENTAGE);
 		vlayout.addComponent(form);
 		vlayout.addComponent(addBtn);
-		return vlayout;
+		final Panel panel=new Panel("Edit");
+		panel.setContent(vlayout);
+		panel.setWidth(98, Unit.PERCENTAGE);
+		return panel;
 	}
 	
 	private void listTickets() {
