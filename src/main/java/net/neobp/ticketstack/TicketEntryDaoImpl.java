@@ -74,10 +74,15 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 
 	@Override
 	public TicketEntry getTicketEntry(final String ticket) {
-		return jdbcTemplate.queryForObject(
+		try {
+			return jdbcTemplate.queryForObject(
 				"select prio, text, ticket from tickets where ticket = ?",
 				new Object[]{ ticket },
 				teRowMapper);
+		}catch(Exception e) {
+			// notfound
+			return null;
+		}
 	}
 
 	private class TicketEntryRowMapper implements RowMapper<TicketEntry> {
