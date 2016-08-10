@@ -9,10 +9,10 @@ public class TicketEntry {
 		// jaxb needs this
 	}
 
-	private long id;
 	private String ticket;
 	private String text;
 	private int prio;
+	private TicketEntryState state;
 	
 	public String getTicket() {
 		return ticket;
@@ -38,12 +38,12 @@ public class TicketEntry {
 		this.prio = prio;
 	}
 
-	public long getId() {
-		return id;
+	public TicketEntryState getState() {
+		return state;
 	}
 
-	public void setId(final long id) {
-		this.id = id;
+	public void setState(final TicketEntryState state) {
+		this.state = state;
 	}
 
 }

@@ -1,0 +1,12 @@
+The branch ResubAndStates belongs to the 
+ticket https://github.com/FrankEndriss/Ticketstack/issues/6
+
+There need to be made a database update before it can work:
+
+change table tickets add status char(6) ;
+
+create table resubs (
+	char ticket;
+	timestamp when;
+	varchar text;
+);
