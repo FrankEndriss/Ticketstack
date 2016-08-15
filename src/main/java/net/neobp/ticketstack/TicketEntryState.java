@@ -10,7 +10,7 @@ public enum TicketEntryState {
 	/**
 	 * One should work on this ticket if he finds the time. (In Arbeit).
 	 */
-	WORK,
+	DO,
 	/**
 	 * One has to wait for someting before he can work on this ticket (Unterbrochen).
 	 */
@@ -18,7 +18,7 @@ public enum TicketEntryState {
 	/**
 	 * One has to wait for a date/time before he can/must work on this ticket (Wiedervorlage).
 	 */
-	RESUBMISSION,
+	RESUB,
 	/**
 	 * This ticket is done, former it was deleted instead of using this state.
 	 */
