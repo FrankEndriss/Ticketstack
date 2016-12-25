@@ -31,6 +31,7 @@ import net.neobp.ticketstack.TicketEntryDao;
 @SpringUI(path="vaadin")
 @Theme("valo")
 public class VaadinUi extends UI {
+	private static final long serialVersionUID = 1L;
 	private final TicketEntryDao tedao;
 	private final Table table;
 

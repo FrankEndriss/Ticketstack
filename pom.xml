@@ -17,7 +17,12 @@
 
 
 	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+
+		<speedment.version>2.3.7</speedment.version>
+                <postgresql-version>9.4-1206-jdbc4</postgresql-version>
 	</properties>
 
 	<dependencies>
@@ -31,6 +36,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 	
+<!--  we want to use JSR-330 @Inject instead of @Autowired -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
 <!-- not sure if starter-web together with vaadin-start is good or bad -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -43,7 +55,7 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
-	<!-- needed for packaging as WAR -->
+<!-- needed for packaging as WAR -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
@@ -59,20 +71,19 @@
 			<!-- <version>4.11</version> -->
 		</dependency>
 		
-	<!--  we want to use JSR-330 @Inject instead of @Autowired -->
+<!--  we use postgreSQL database -->
 		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-
-		<!--  we use postgreSQL database -->
-		<dependency>
-			<groupId>postgresql</groupId>
+			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.1-901-1.jdbc4</version>
+                    	<version>${postgresql-version}</version>
 		</dependency>
 
+<!-- we try to use speedment as ORM -->
+		<dependency>
+			<groupId>com.speedment</groupId>
+			<artifactId>speedment</artifactId>
+			<version>${speedment.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -81,6 +92,18 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.speedment</groupId>
+				<artifactId>speedment-maven-plugin</artifactId>
+				<version>${speedment.version}</version>
+				<dependencies>
+                			<dependency>
+                    				<groupId>org.postgresql</groupId>
+                    				<artifactId>postgresql</artifactId>
+                    				<version>${postgresql-version}</version>
+                			</dependency>
+            			</dependencies> 
 			</plugin>
 		</plugins>
 	</build>
