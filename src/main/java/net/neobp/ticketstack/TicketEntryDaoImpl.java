@@ -61,6 +61,15 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 
 	@Override
 	@Transactional
+	public void updateTicketState(final TicketEntry ticketEntry, final TicketEntryState newstate) {
+		jdbcTemplate.update(
+			"update tickets set tstate = ? where ticket = ?",
+			newstate.toString(),
+			ticketEntry.getTicket());
+	}
+
+	@Override
+	@Transactional
 	public void insertTicket(final TicketEntry ticketEntry) {
 //				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(
@@ -76,7 +85,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	public TicketEntry getTicketEntry(final String ticket) {
 		try {
 			return jdbcTemplate.queryForObject(
-				"select prio, text, ticket from tickets where ticket = ?",
+				"select prio, text, ticket, tstate from tickets where ticket = ?",
 				new Object[]{ ticket },
 				teRowMapper);
 		}catch(Exception e) {
@@ -92,6 +101,7 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 			te.setPrio(rs.getInt("prio"));
 			te.setText(rs.getString("text"));
 			te.setTicket(rs.getString("ticket"));
+			te.setState(TicketEntryState.valueOf(rs.getString("tstate").trim()));
 			return te;
 		}
 	}

@@ -19,6 +19,13 @@ public interface TicketEntryDao {
 	void updateTicketText(TicketEntry ticketEntry, String updText);
 
 	/**
+	 * Updates the state of the ticket.
+	 * @param ticketentry The ticket.
+	 * @param newstate The new state of the ticket. If same os old one its a noop.
+	 */
+	void updateTicketState(TicketEntry ticketentry, TicketEntryState newstate);
+
+	/**
 	 * @param ticketEntry a new ticket entry
 	 */
 	void insertTicket(TicketEntry ticketEntry);

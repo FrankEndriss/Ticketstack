@@ -1,9 +1,12 @@
 package net.neobp.ticketstack;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class TicketEntry {
+public class TicketEntry implements Serializable {
+	private static long serializeableVersionUID=1;
 	
 	public TicketEntry() {
 		// jaxb needs this
