@@ -2,108 +2,23 @@
   "config" : {
     "expanded" : true,
     "companyName" : "neobp",
-    "name" : "ticketstack",
+    "name" : "speedment",
     "packageLocation" : "src/main/java/",
-    "packageName" : "net.neobp",
+    "packageName" : "net.neobp.speedment",
     "dbmses" : [
       {
         "expanded" : true,
-        "port" : 5432.0,
+        "port" : 5432,
         "schemas" : [
           {
             "tables" : [
               {
-                "foreignKeys" : [
-                  {
-                    "expanded" : false,
-                    "foreignKeyColumns" : [
-                      {
-                        "foreignDatabaseName" : "ticketstack",
-                        "foreignSchemaName" : "public",
-                        "expanded" : true,
-                        "name" : "ticket",
-                        "foreignColumnName" : "ticket",
-                        "foreignTableName" : "tickets",
-                        "ordinalPosition" : 1.0
-                      }
-                    ],
-                    "name" : "resubs_ticket_fkey",
-                    "enabled" : true
-                  }
-                ],
                 "expanded" : true,
                 "primaryKeyColumns" : [
                   {
                     "expanded" : true,
-                    "name" : "resubid",
+                    "name" : "ticket",
                     "ordinalPosition" : 1
-                  }
-                ],
-                "indexes" : [
-                  {
-                    "expanded" : false,
-                    "unique" : true,
-                    "name" : "resubs_pk",
-                    "indexColumns" : [
-                      {
-                        "orderType" : "ASC",
-                        "expanded" : true,
-                        "name" : "resubid",
-                        "ordinalPosition" : 1
-                      }
-                    ],
-                    "enabled" : true
-                  }
-                ],
-                "columns" : [
-                  {
-                    "databaseType" : "java.lang.String",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.StringIdentityMapper",
-                    "expanded" : true,
-                    "nullable" : false,
-                    "name" : "ticket",
-                    "ordinalPosition" : 1.0,
-                    "enabled" : true
-                  },
-                  {
-                    "databaseType" : "java.sql.Timestamp",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.TimestampIdentityMapper",
-                    "expanded" : true,
-                    "nullable" : false,
-                    "name" : "resubts",
-                    "ordinalPosition" : 2.0,
-                    "enabled" : true
-                  },
-                  {
-                    "databaseType" : "java.lang.String",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.StringIdentityMapper",
-                    "expanded" : true,
-                    "nullable" : true,
-                    "name" : "text",
-                    "ordinalPosition" : 3.0,
-                    "enabled" : true
-                  },
-                  {
-                    "databaseType" : "java.lang.Integer",
-                    "typeMapper" : "com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper",
-                    "expanded" : true,
-                    "nullable" : false,
-                    "autoIncrement" : true,
-                    "name" : "resubid",
-                    "ordinalPosition" : 4,
-                    "enabled" : true
-                  }
-                ],
-                "name" : "resubs",
-                "enabled" : true
-              },
-              {
-                "expanded" : false,
-                "primaryKeyColumns" : [
-                  {
-                    "expanded" : true,
-                    "name" : "ticket",
-                    "ordinalPosition" : 1.0
                   }
                 ],
                 "indexes" : [
@@ -116,7 +31,7 @@
                         "orderType" : "ASC",
                         "expanded" : true,
                         "name" : "ticket",
-                        "ordinalPosition" : 1.0
+                        "ordinalPosition" : 1
                       }
                     ],
                     "enabled" : true
@@ -125,38 +40,34 @@
                 "columns" : [
                   {
                     "databaseType" : "java.lang.String",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.StringIdentityMapper",
                     "expanded" : true,
                     "nullable" : false,
                     "name" : "ticket",
-                    "ordinalPosition" : 1.0,
+                    "ordinalPosition" : 1,
                     "enabled" : true
                   },
                   {
                     "databaseType" : "java.lang.String",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.StringIdentityMapper",
                     "expanded" : true,
                     "nullable" : true,
                     "name" : "text",
-                    "ordinalPosition" : 2.0,
+                    "ordinalPosition" : 2,
                     "enabled" : true
                   },
                   {
                     "databaseType" : "java.lang.Integer",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.IntegerIdentityMapper",
                     "expanded" : true,
                     "nullable" : true,
                     "name" : "prio",
-                    "ordinalPosition" : 3.0,
+                    "ordinalPosition" : 3,
                     "enabled" : true
                   },
                   {
                     "databaseType" : "java.lang.String",
-                    "typeMapper" : "com.speedment.config.db.mapper.identity.StringIdentityMapper",
                     "expanded" : true,
                     "nullable" : false,
                     "name" : "tstate",
-                    "ordinalPosition" : 4.0,
+                    "ordinalPosition" : 4,
                     "enabled" : true
                   }
                 ],
@@ -164,14 +75,14 @@
                 "enabled" : true
               }
             ],
-            "expanded" : false,
+            "expanded" : true,
             "name" : "public",
             "enabled" : true
           }
         ],
-        "name" : "ticketstack",
         "typeName" : "PostgreSQL",
         "ipAddress" : "127.0.0.1",
+        "name" : "ticketstack",
         "enabled" : true,
         "username" : "nmsmai"
       }
