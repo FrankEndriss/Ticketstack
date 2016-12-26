@@ -21,7 +21,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
-		<speedment.version>2.3.7</speedment.version>
+		<speedment.version>3.0.1</speedment.version>
                 <postgresql-version>9.4-1206-jdbc4</postgresql-version>
 	</properties>
 
@@ -76,13 +76,15 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
                     	<version>${postgresql-version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 <!-- we try to use speedment as ORM -->
 		<dependency>
 			<groupId>com.speedment</groupId>
-			<artifactId>speedment</artifactId>
+			<artifactId>runtime</artifactId>
 			<version>${speedment.version}</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 
