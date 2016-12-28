@@ -28,6 +28,7 @@ ALTER TABLE tickets
   OWNER TO postgres;
 */
 @Component
+@DaoImplementation(orm=DaoImplementation.ORM.SPRINGJDBC)
 public class TicketEntryDaoImpl implements TicketEntryDao {
     private final static Logger log = Logger.getLogger(TicketEntryDaoImpl.class);
     

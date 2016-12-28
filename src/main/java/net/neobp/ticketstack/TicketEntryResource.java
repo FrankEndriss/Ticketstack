@@ -2,9 +2,8 @@ package net.neobp.ticketstack;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,8 @@ public class TicketEntryResource {
 
 	private final TicketEntryDao teDao;
 
-	@Inject
-	public TicketEntryResource(final TicketEntryDao teDao) {
+	@Autowired
+	public TicketEntryResource(@DaoImplementation(orm=DaoImplementation.ORM.SPRINGJDBC) final TicketEntryDao teDao) {
 		this.teDao=teDao;
 		log.info("TicketEntryResource created");
 	}

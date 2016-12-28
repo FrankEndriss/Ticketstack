@@ -119,7 +119,7 @@ public class GeneratedSpeedmentMetadata extends AbstractApplicationMetadata {
             "        \"ipAddress\" : \"127.0.0.1\",",
             "        \"name\" : \"ticketstack\",",
             "        \"enabled\" : true,",
-            "        \"username\" : \"nmsmai\"",
+            "        \"username\" : \"postgres\"",
             "      }",
             "    ],",
             "    \"enabled\" : true",
