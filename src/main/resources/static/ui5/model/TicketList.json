@@ -1,9 +1,15 @@
 {
-	"ticketList"	:  [
-		{
-			"ticket"	: "no ticket",
-			"text"		: "no text",
-			"prio"		: "-1"
-		}
+	"title" : "Sample Tickets",
+	"tickets" : [
+	{
+		"ticket"	: "no ticket",
+		"text"		: "no text",
+		"prio"		: "-1"
+	},
+	{
+		"ticket"	: "other non ticket",
+		"text"		: "this one without text, too",
+		"prio"		: "-2"
+	}
 	]
 }

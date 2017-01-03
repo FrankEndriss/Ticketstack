@@ -37,10 +37,6 @@
 				"settings": {
 					"bundleName": "ticketstack.i18n.i18n"
 				}
-			},
-			"TicketList": {
-				"type": "sap.ui.model.json.JSONModel",
-				"uri": "model/TicketList.json"
 			}
 		},
 		"autoPrefixId": true,
