@@ -6,13 +6,14 @@
 	>
 	
     <!-- 
+			<Page title="openSAP - Developing with SAPUI5">
 				        items="{ path: '/TicketList/tickets', sorter: { path: 'prio' } }"
 				        items="{ path: '{/tickets}', sorter: { path: 'prio' } }"
 				        rows="{/tickets}"
      -->
 	<App>
 		<pages>
-			<Page title="openSAP - Developing with SAPUI5">
+			<Page>
 				<content>
 				    <Table
 				        id="ticketsTable"
@@ -22,13 +23,19 @@
 				        visibleRowCount="4" >
 				        
 				        <columns>
-				            <Column width="20%">
+				            <Column width="5%">
+				                <Text text="Up" />
+				            </Column>
+				            <Column width="5%">
+				                <Text text="Down" />
+				            </Column>
+				            <Column width="10%">
 				                <Text text="Ticket" />
 				            </Column>
 				            <Column width="auto">
 				                <Text text="Text" />
 				            </Column>
-				            <Column width="10%">
+				            <Column width="5%">
 				                <Text text="Delete" />
 				            </Column>
 				        </columns>
@@ -36,9 +43,11 @@
 				        <items>
 				            <ColumnListItem>
 				                <cells>
-				                    <Text text="{ticket}"/>
+				                    <Button text="Up" press="onUpClicked" />
+				                    <Button text="Down" press="onDownClicked" />
+				                    <Link text="{ticket}" target="_blank" href="https://support.neo-business.info/browse/{ticket}"/>
 				                    <Text text="{text}"/>
-				                    <Text text="{prio}"/>
+				                    <Button text="Del" press="onDelClicked" />
 				                </cells>
 				            </ColumnListItem>
 				        </items>
