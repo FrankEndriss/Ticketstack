@@ -2,6 +2,7 @@ package net.neobp.ticketstack;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,7 +65,6 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 	public void insertTicket(final TicketEntry ticketEntry) {
 //				"insert into tickets (prio, text, ticket) values(?, ?, ?)",
 		jdbcTemplate.update(
-
 // TODO: "min(prio)-1" returns null if the table is empty, need to fix
 // Fix by implementing MinPrioService??? It is fairly unspecified how to synchronize in sql.
 				"insert into tickets (prio, text, ticket) select min(prio)-1, ?, ? from tickets",
@@ -74,15 +74,14 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 
 	@Override
 	public TicketEntry getTicketEntry(final String ticket) {
-		try {
-			return jdbcTemplate.queryForObject(
-				"select prio, text, ticket from tickets where ticket = ?",
-				new Object[]{ ticket },
-				teRowMapper);
-		}catch(Exception e) {
-			// notfound
-			return null;
-		}
+		Collection<TicketEntry> list=jdbcTemplate.query(
+			"select prio, text, ticket from tickets where ticket = ?",
+			new Object[]{ ticket },
+			teRowMapper);
+		if(list.size()>0)
+			return list.iterator().next();
+
+		return null;
 	}
 
 	private class TicketEntryRowMapper implements RowMapper<TicketEntry> {
@@ -103,14 +102,14 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		if(thisTicket==null)
 			return false;
 		// select the ticket just after this ticket
-		final TicketEntry ticketAfter=jdbcTemplate.queryForObject(
+		final Collection<TicketEntry> ticketAfter=jdbcTemplate.query(
 				"select * from tickets where prio > ? order by prio limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
-		if(ticketAfter==null)
+		if(ticketAfter.size()==0)
 			return false;
 
-		swapPrios(thisTicket, ticketAfter);
+		swapPrios(thisTicket, ticketAfter.iterator().next());
 		return true;
 	}
 
@@ -120,19 +119,21 @@ public class TicketEntryDaoImpl implements TicketEntryDao {
 		final TicketEntry thisTicket=getTicketEntry(ticket);
 		if(thisTicket==null)
 			return false;
+
 		// select the ticket just before this ticket
-		final TicketEntry ticketBefore=jdbcTemplate.queryForObject(
+		final Collection<TicketEntry> ticketsBefore=jdbcTemplate.query(
 				"select * from tickets where prio < ? order by prio desc limit 1",
 				new Object[]{ thisTicket.getPrio() },
 				teRowMapper);
-		if(ticketBefore==null)
+		if(ticketsBefore.size()==0)
 			return false;
 		
-		swapPrios(thisTicket, ticketBefore);
+		swapPrios(thisTicket, ticketsBefore.iterator().next());
 		return true;
 	}
 	
 	private void swapPrios(final TicketEntry t1, final TicketEntry t2) {
+		// use three corner swap in case column prio is distinct indexed
 		final int tmpPrio=jdbcTemplate.queryForObject("select max(prio)+1000 from tickets", Integer.class);
 		updatePrio(t1.getTicket(), tmpPrio);
 		updatePrio(t2.getTicket(), t1.getPrio());

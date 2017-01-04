@@ -45,7 +45,7 @@
 				                <cells>
 				                    <Button text="Up" press="onUpClicked" />
 				                    <Button text="Down" press="onDownClicked" />
-				                    <Link text="{ticket}" target="_blank" href="https://support.neo-business.info/browse/{ticket}"/>
+				                    <Link text="{ticket}" target="_blank" href="{href}"/>
 				                    <Text text="{text}"/>
 				                    <Button text="Del" press="onDelClicked" />
 				                </cells>
