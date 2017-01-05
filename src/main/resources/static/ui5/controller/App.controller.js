@@ -9,7 +9,9 @@ sap.ui.define([
 	// however, thisController is set in the initilizer
 	var thisController;
 
-	var baseRestUrl='http://localhost:8087/api/';
+//	var baseRestUrl='http://localhost:8087/api/';
+	// This URL should be nicely configurable somewhere
+	var baseRestUrl=(""+window.location).replace("/index.html", "").replace("/ui5", "/api/");
 	
 	return Controller.extend("ticketstack.controller.App", {
 		
