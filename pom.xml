@@ -12,7 +12,7 @@
 	<parent> <!-- this project is bases on spring boot -->
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.0.RELEASE</version>
+		<version>1.4.3.RELEASE</version>
 	</parent>
 
 
