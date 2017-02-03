@@ -29,9 +29,13 @@ import org.apache.olingo.server.api.serializer.SerializerResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /** This class creates the data, and is called upon GET requests
  */
+@Component
+@Scope("prototype")
 public class TicketEntityCollectionProcessor implements EntityCollectionProcessor {
 
 	private OData odata;
@@ -79,7 +83,7 @@ public class TicketEntityCollectionProcessor implements EntityCollectionProcesso
 	private EntityCollection getData(final EdmEntitySet edmEntitySet) {
 		   final EntityCollection ticketsCollection = new EntityCollection();
 		   // check for which EdmEntitySet the data is requested
-		   if(DemoEdmProvider.ES_TICKETS_NAME.equals(edmEntitySet.getName())) {
+		   if(TicketstackEdmProvider.ES_TICKETS_NAME.equals(edmEntitySet.getName())) {
 		       final List<Entity> ticketsList = ticketsCollection.getEntities();
 
 		       // add some sample product entities

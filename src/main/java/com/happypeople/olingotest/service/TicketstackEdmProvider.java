@@ -16,15 +16,28 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.commons.api.ex.ODataException;
+import org.springframework.stereotype.Component;
 
 /** This class is the main service to provide the metadata for our OData service implementation.
  * see https://olingo.apache.org/doc/odata4/tutorials/read/tutorial_read.html
+ * Try these URLs to see the result:
+ * 
+ * The Service document includes the name(s) of the available entities
+ * curl http://localhost:8086/TicketsService.svc/
+ * 
+ * The Metadata document includes the structure of the available entities
+ * curl http://localhost:8086/TicketsService.svc/metadata
+ * 
+ * This request querys for the Entity set "Tickets"
+ * curl http://localhost:8086/TicketsService.svc/Tickets
+ * 
  * @author fendriss
  */
-public class DemoEdmProvider extends CsdlAbstractEdmProvider {
+@Component
+public class TicketstackEdmProvider extends CsdlAbstractEdmProvider {
 
 	// Service Namespace
-	public static final String NAMESPACE = "happypeople.OData.Demo";
+	public static final String NAMESPACE = "happypeople.OData.Ticketstack";
 
 	// EDM Container
 	public static final String CONTAINER_NAME = "Container";

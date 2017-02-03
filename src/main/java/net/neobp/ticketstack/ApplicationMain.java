@@ -3,13 +3,15 @@ package net.neobp.ticketstack;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 import com.happypeople.olingotest.web.OlingoServlet;
 
@@ -17,6 +19,7 @@ import com.happypeople.olingotest.web.OlingoServlet;
  * extends SpringBootServletInitializer is needed to run the app as a WAR within Tomcat (8.x)
  */
 @SpringBootApplication
+@ComponentScan({ "net.neobp", "com.happypeople" })
 public class ApplicationMain extends SpringBootServletInitializer {
 
     private final static Logger log = Logger.getLogger(ApplicationMain.class);
@@ -42,12 +45,17 @@ public class ApplicationMain extends SpringBootServletInitializer {
         return application.sources(ApplicationMain.class);
     }
 
+    /////////////////// some Beans used in this app //////////////////////////////////////////
+    @Autowired
+    private ApplicationContext applicationContext;
+    
 	/** This method creates the Olingo based servlet to serv the OData service for Ticketstack
 	 * @return A ServletRegistrationBean configured to register the OlingoServlet
 	 */
 	@Bean
 	public ServletRegistrationBean olingoTicketstackServletRegistrationBean() {
 		log.info("creating OlingoServlet");
-		return new ServletRegistrationBean(new OlingoServlet(), "/TicketsService.svc/*");
+		return new ServletRegistrationBean(applicationContext.getBean(OlingoServlet.class), "/TicketsService.svc/*");
 	}
+	
 }
