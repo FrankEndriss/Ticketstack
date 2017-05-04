@@ -1,3 +1,6 @@
+// the sapui5-GUI is available per
+// http://localhost:8086/ui5/index.html
+
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
