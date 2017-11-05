@@ -87,6 +87,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+<plugin>
+  <groupId>com.spotify</groupId>
+  <artifactId>dockerfile-maven-plugin</artifactId>
+  <version>1.3.6</version>
+  <executions>
+    <execution>
+      <id>default</id>
+      <goals>
+        <goal>build</goal>
+        <goal>push</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <repository>fren/ticketstack</repository>
+    <tag>0.0.1-SNAPSHOT</tag>
+    <buildArgs>
+      <JAR_FILE>${project.build.finalName}.war</JAR_FILE>
+    </buildArgs>
+  </configuration>
+</plugin>
 		</plugins>
 	</build>
 </project>
