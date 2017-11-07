@@ -31,6 +31,9 @@ import net.neobp.ticketstack.TicketEntryDao;
 @SpringUI(path="vaadin")
 @Theme("valo")
 public class VaadinUi extends UI {
+	/** Default prefix for external ticket links. */
+	public final static String DEFAULT_TICKETURL_PREFIX="https://intranet.god.de/track/printItem.action?key=";
+
 	private final TicketEntryDao tedao;
 	private final Table table;
 
@@ -161,7 +164,7 @@ public class VaadinUi extends UI {
 			row.getItemProperty("Delete").setValue(delBtn);
 			
 			final Link link=new Link(entry.getTicket(),
-					new ExternalResource("https://support.neo-business.info/browse/"+entry.getTicket()));
+					new ExternalResource(DEFAULT_TICKETURL_PREFIX+entry.getTicket()));
 			row.getItemProperty("Ticket").setValue(link);
 
 			Label textLabel=new Label(entry.getText());

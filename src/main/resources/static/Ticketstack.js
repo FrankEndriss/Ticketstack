@@ -68,7 +68,8 @@ function TicketstackBody(tableParent, inputParent) {
                     				function($td, model, row, col) {
                     					var ticketId=model.getValue(row, col);
                     					$td.append($("<a>", {
-                    						href: 'https://support.neo-business.info/browse/'+ticketId,
+                    						// href: 'https://support.neo-business.info/browse/'+ticketId,
+                    						href: 'https://intranet.god.de/track/printItem.action?key='+ticketId,
                     						text: ticketId
                     					}))
                     					$td.children('a').css('white-space', 'nowrap');
