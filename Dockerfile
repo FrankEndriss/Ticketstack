@@ -5,5 +5,4 @@ EXPOSE 8087
 
 ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/myservice/Ticketstack.jar"]
 
-ARG JAR_FILE
-ADD target/${JAR_FILE} /usr/share/myservice/Ticketstack.jar
+ADD target/Ticketstack##*.war /usr/share/myservice/Ticketstack.jar
