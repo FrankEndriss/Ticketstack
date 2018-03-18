@@ -7,9 +7,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ticketstack
       PGDATA: /var/lib/postgresql/data/pgdata
-    image: postgres:latest
+    image: postgres:10
     volumes:
-      - ./pgdata:/var/lib/postgresql/data/pgdata
+      - pgdata:/var/lib/postgresql/data/pgdata
 
   fren-ticketstack:
     build:
@@ -19,6 +19,6 @@ services:
     links:
      - fren-ticketstack-postgres:postgres
 
-#volumes:
-#  pgdata:
-#    driver: local
+volumes:
+  pgdata:
+    driver: local
